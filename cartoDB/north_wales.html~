@@ -1,0 +1,97 @@
+<html>
+<head>
+  <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+ 
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v2/themes/css/cartodb.ie.css" />
+  <![endif]-->
+  <style>
+    html, body {width:100%; height:100%; padding: 0; margin: 0;}
+    #map { width: 100%; height:100%; background: white;}
+    #layer_selector {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 0;
+      }
+ 
+      #layer_selector ul {
+        padding: 0; margin: 0;
+        list-style-type: none;
+      }
+ 
+      #layer_selector li {
+        border-bottom: 1px solid #999;
+        padding: 15px 30px;
+        font-family: "Helvetica", Arial;
+        font-size: 13px;
+        color: #444;
+        cursor: auto;
+      }
+ 
+      #layer_selector li:hover {
+        background-color: #F0F0F0;
+        cursor: pointer;
+      }
+ 
+      #layer_selector li.selected {
+        background-color: #EEE;
+      }
+   
+  </style>
+
+  <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+  <script>
+    var map;
+    
+     
+    function init(){
+      // initiate leaflet map
+      map = new L.Map('map', { 
+        center: [53.09, -3.79],
+        zoom: 10
+      })
+
+      L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg', {
+        attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
+      }).addTo(map);
+
+   
+      var layerUrl = 'http://bugblatter1.cartodb.com/api/v2/viz/8b70c49a-c814-11e4-8999-0e4fddd5de28/viz.json';
+
+      // change the query for the first layer
+      var subLayerOptions = {
+        /*sql: "SELECT * FROM iot_demo where adm0_a3 = 'USA'",
+        cartocss: "#example_cartodbjs_1{marker-fill: #109DCD; marker-width: 5; marker-line-color: white; marker-line-width: 0;}"*/
+      }
+
+      cartodb.createLayer(map, layerUrl)
+        .addTo(map)
+        .on('done', function(layer) {
+           layer.getSubLayer(0).set(subLayerOptions);
+          
+           var sublayer1 = layer.getSubLayer(1);
+           sublayer1.on('featureClick', function(e, pos, latlng, data) {
+              console.log("You clicked " + data.cartodb_id);
+           });
+
+           var sublayer2 = layer.getSubLayer(2);
+           sublayer2.on('featureClick', function (e, pos, latlng, data) {
+               console.log(data);
+           });
+
+           
+           
+        }).on('error', function() {
+          //log the error
+        });
+        
+       
+    }  
+  </script>
+</head>
+
+<body onload="init()">
+  <div id='map'></div>
+</body>
+</html>

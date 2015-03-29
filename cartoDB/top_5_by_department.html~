@@ -1,0 +1,187 @@
+<html>
+<head>
+  <!-- cartoDB styles -->
+  <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" /> 
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v2/themes/css/cartodb.ie.css" />
+  <![endif]-->
+
+  
+  <style>
+   div.cartodb-legend .legend-title {
+    margin: 0 0 3px 0;
+    text-align:left;
+    color:#666;
+    font-weight:bold;
+    font-size:9px;
+    text-transform: uppercase;
+}
+
+div.cartodb-legend {
+  position:absolute;
+  bottom: 15px;
+  right: 15px;
+  padding: 3px 5px 4px 5px;
+
+  font:normal 13px "Helvetica",Arial;
+  color:#858585;
+  text-align: left;
+  webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+
+  border: 1px solid #999999;
+  background: white;
+  z-index: 105;
+}
+ 
+	    
+    html, body {width:100%; height:640px; padding: 0; margin: 0;}
+    #map { width: 100%; height:640px; background: white;}
+    
+    #layer_selector {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 0;
+      }
+ 
+      #layer_selector ul {
+        padding: 0; margin: 0;
+        list-style-type: none;
+      }
+ 
+      #layer_selector li {
+        border-bottom: 1px solid #999;
+        padding: 10px 10px;
+        font-family: "Helvetica", Arial;
+        font-size: 13px;
+        color: #444;
+        cursor: auto;
+      }
+ 
+      #layer_selector li:hover {
+        background-color: #F0F0F0;
+        cursor: pointer;
+      }
+ 
+      #layer_selector li.selected {
+        background-color: #EEE;
+      }
+
+      div.emapsite-infobox {
+	  padding: 1px;
+	  position: absolute;
+	  display: inline-block;
+	  -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0 0 4px 2px;
+	  -moz-box-shadow: rgba(0, 0, 0, 0.5) 0 0 4px 2px;
+	  box-shadow: rgba(0, 0, 0, 0.5) 0 0 4px 2px;
+	  background: white;
+	  -webkit-border-radius: 1px;
+	  -moz-border-radius: 1px;
+	  -ms-border-radius: 1px;
+	  -o-border-radius: 1px;
+	  border-radius: 2px;
+	  border: 2px solid #999999;
+	  text-align:left;
+	  z-index:105;
+     }
+   
+  </style>
+
+  <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+  <script>
+    var map;  
+    var d3_results={};
+
+    function init(){
+      // initiate leaflet map
+      map = new L.Map('map', { 
+        center: [53.09, -3.79],
+        zoom: 9,
+        maxZoom: 13,
+        minZoom: 8
+      });
+
+
+      //add some tiles      
+      /*L.tileLayer('https://cartodb-wms.global.ssl.fastly.net/mapproxy/ws3_ws_emapsite_com_scaledependent_vector_EPSG_27700/wmts/map/webmercator/{z}/{x}/{y}.png', {
+          attribution: 'Ordnance Survey <a href="https://www.ordnancesurvey.co.uk/" target="_blank">Ordnance Survery</a>'
+      }).addTo(map);
+      */
+
+      
+      L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+           
+
+      //cartoDB visualization
+      var layerUrl = 'http://bugblatter1.cartodb.com/api/v2/viz/f9506ba8-d252-11e4-bcb9-0e4fddd5de28/viz.json';
+
+
+      cartodb.createLayer(map, layerUrl)
+        .addTo(map)
+        .on('done', function(layers) {
+         
+           var sublayer0 = layers.getSubLayer(0);
+           sublayer0.on('featureClick', function (e, pos, latlng, data) {
+              // console.log(data);
+               
+               //pie charts, we can use ST_Centroid(the_geom) as the geom
+               $.getJSON('https://bugblatter1.cartodb.com/api/v2/sql?format=GeoJSON&q=SELECT dep_dir_name as bar_input, sum(welsh_govt_spending) as welsh_govt, sum(total_other) as total_other, the_geom from top_5_wg_cap_schemes_postcode_geocoded_summary group by dep_dir_name, the_geom &api_key=a36647bedac6e46dbaed2c7d0eb72a5fbc0b162e',
+                  function(data) {                                    
+                      var arr = [];                      
+                      var d3_res = '';
+                      var counter = 0;
+                      $.each(data.features, function(key, value) {
+                          $.each(value.properties, function(key, value) { 
+                             if(key=='bar_input'){                                 
+                                 if (counter>0) 
+                                     d3_res += ',';
+                                 counter++;
+                                 d3_res += "{bar_input:'" + value + "', spending:{";
+                             }
+                             else
+                                 //convert to millions
+                                 arr.push(key + ":" + value/1000000);
+                             });		             
+                             d3_res += arr.join(',') + '}}\n';
+                             arr = [];//clear array
+                         });
+                         arr.push(d3_res);//convert to array that can be sent to d3
+                         console.log(d3_res); 
+                  });     
+                         
+           });           
+           
+        }).on('error', function(err) {
+           console.log("The following error occured " + err);
+        });     
+       
+    }   
+
+  </script>
+</head>
+
+<body onload="init()">
+  <!-- map div -->
+  <div id='map'></div>
+
+   <!-- custom layer selector -->
+   <!--div id="layer_selector" class="emapsite-infobox">
+      <ul>
+        <li id="0" class="selected">All layers</li>       
+        <li id="1">Health and social services</li>
+        <li id="2">Local government and communities</li>
+        <li id="3">Environment and sustainable development</li>
+        <li id="4">Economy science and transport</li>
+      </ul>
+    </div-->
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>GEL - Core</title>
+	<meta name="title" content=""> 
+<meta name="description" content=""> 
+<meta name="author" content=""> 
+<meta name="eGMS.accessibility" scheme="WCAG" content="" /> 
+<meta name="DC.contributor" content="" /> 
+<meta name="DC.creator" content="" /> 
+<meta name="DC.date.issued" scheme="W3CDTF" content="" /> 
+<meta name="DC.date.modified" scheme="W3CDTF" content="" /> 
+<meta name="eGMS.disposal.review" scheme="W3CDTF" content="" /> 
+<meta name="DC.format.medium" scheme="IMT" content="" /> 
+<meta name="DC.identifier" content="" /> 
+<meta name="DC.language" scheme="ISO 639-2/T" content="" /> 
+<meta name="DC.publisher" content="" /> 
+<meta name="DC.rights.copyright" content="" /> 
+<meta name="DC.title" content="" /> 
+<meta name="DC.Description" content="" /> 
+	
+	<link rel="stylesheet" href="cbin/css/reset.css">
+	<link rel="stylesheet" href="cbin/css/style.css">
+	<link type="text/css" href="cbin/css/print.css" media="print" rel="stylesheet">
+
+	<script src="cbin/js/libs/modernizr-2.5.3.min.js"></script>
+
+<script type="text/javascript">
+  //function resizeIframe(obj){
+  //   {obj.style.height = 0;};
+  //   {obj.style.height = obj.contentWindow.document.body.scrollHeight + 500 + 'px';}
+  //}
+</script>
+
+</head>
+<body class="home">
+<!-- Global masthead-->
+<div id="global_masthead">
+	<div class="centered col960">
+		<a href="#"><img class="global_logo" src="cbin/site_furniture/wg_global_logo.png" alt="#" /></a>
+	</div>
+</div>
+<!--End Global masthead-->
+
+<div id="container">
+	<header id="top">
+		<div id="header_strip">
+			<div id="logo_strapline">
+				<a href="index.html" id="logo">
+					<h1 class="site_title">GEL - core</h1>
+
+					<img src="cbin/site_furniture/logo.png" alt="#"/>
+				</a>
+				<div id="strapline"><p>Government assets dashboard</p></div>
+			</div>
+			<div id="header_links">
+				<div id="site_services">
+					<a href="#">About</a>
+					<a href="#">Site map</a>
+					<a href="#">Contact</a>
+				</div>
+				<div class="lower_set">
+                    <div id="sm_links">
+                        <a href="#"><img src="cbin/site_furniture/facebook_icon.png" alt="#"></a>
+                        <a href="#"><img src="cbin/site_furniture/twitter_icon.png" alt="#"></a>
+                        <a href="#"><img src="cbin/site_furniture/youtube_icon.png" alt="#"></a>
+                    </div>					
+					<div id="lang_switcher"><a href="#">Cymraeg</a></div>
+					<div id="main_search">
+						<form action="#" method="post"> 
+							<input type="text" name="searchQuery" class="main_search_input" value="Search">
+							<input type="submit" class="main_search_button" value="">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div><!--End header_strip-->
+		<nav id="main_nav">
+			<ul>
+				<li class="drop_menu"><span><a href="#">Asset Views</a></span>
+					<div class="drop_down">
+						<div class="inner">
+							<ul class="list_group group1">
+								<li><a href="#">Spending by region</a></li>
+								<li><a href="#">Spending by type</a></li>
+								<!--li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li-->
+							</ul>
+							<!--ul class="list_group group2">
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+							</ul>
+							<ul class="list_group group3">
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+							</ul-->
+						</div>
+					</div>
+				</li>
+				<li class="drop_menu"><span><a href="#">Nav item 1</a></span>
+					<div class="drop_down">
+						<div class="inner">
+							<ul class="list_group group1">
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+							</ul>
+							<ul class="list_group group2">
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+							</ul>
+							<ul class="list_group group3">
+								<li><a href="#">Sub nav</a></li>
+								<li><a href="#">Sub nav</a></li>
+							</ul>
+						</div>
+					</div>
+				</li>
+				<li><span><a href="#">Nav item 3</a></span></li>
+				<li><span><a href="#">Nav item 4</a></span></li>
+			</ul>
+		</nav>
+	</header>
+	
+	<div id="page">
+    	<section>
+		<iframe src="TestLayout2.html" width = "100%" height = "600px"><iframe>
+        </section>
+	</div><!--End page-->
+
+	<footer id="site_footer">
+		<div class="copyright">
+			<img src="cbin/site_furniture/footer_logo.png" alt="#" />
+			<span>WALIA &copy; 2014</span>
+		</div>
+		<ul class="footer_links ex_links">
+			<li><a href="#">Links</a></li>
+			<li><a href="#">Links</a></li>
+		</ul>
+		<ul class="footer_links">
+			<li><a href="#">Copyright statement</a></li>
+			<li><a href="#">Terms and conditions</a></li>
+			<li><a href="#">Privacy policy</a></li>
+			<li><a href="#">Accessibility</a></li>
+		</ul>
+		<ul class="footer_links omega">
+			<li><a href="#">About</a></li>
+			<li><a href="#">Contact</a></li>
+			<li><a href="#">Site map</a></li>
+		</ul>
+	</footer>
+</div><!--End container-->
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="cbin/js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+<script src="cbin/js/libs/jquery.ba-hashchange.min.js"></script>
+<script src="cbin/js/libs/jquery-ui.1.10.3.js"></script>
+<script src="cbin/js/libs/jquery.easing.1.3.js"></script>
+<script src="cbin/js/site.js"></script>
+</body>
+</html>
