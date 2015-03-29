@@ -29,6 +29,14 @@
 	<link type="text/css" href="cbin/css/print.css" media="print" rel="stylesheet">
 
 	<script src="cbin/js/libs/modernizr-2.5.3.min.js"></script>
+
+<script type="text/javascript">
+  //function resizeIframe(obj){
+  //   {obj.style.height = 0;};
+  //   {obj.style.height = obj.contentWindow.document.body.scrollHeight + 500 + 'px';}
+  //}
+</script>
+
 </head>
 <body class="home">
 <!-- Global masthead-->
@@ -45,10 +53,10 @@
 			<div id="logo_strapline">
 				<a href="index.html" id="logo">
 					<h1 class="site_title">GEL - core</h1>
-
-					<img src="cbin/site_furniture/logo.png" alt="#"/>
-				</a>
-				<div id="strapline"><p>Strapline goes here</p></div>
+                    <!-- site title as png goes here-->
+					<img src="cbin/site_furniture/logo_wsam1.png" alt="#">
+					</a>
+				<div id="strapline"><p></p></div>
 			</div>
 			<div id="header_links">
 				<div id="site_services">
@@ -74,64 +82,27 @@
 		</div><!--End header_strip-->
 		<nav id="main_nav">
 			<ul>
-				<li class="drop_menu"><span><a href="#">Nav item 1</a></span>
+				<li class="drop_menu"><span><a href="#" onclick="document.getElementById('mapboard').src = 'viz1.html';">Top 5 Assets</a></span>
 					<div class="drop_down">
-						<div class="inner">
+						<div class="inner"> 
 							<ul class="list_group group1">
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-							</ul>
-							<ul class="list_group group2">
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-							</ul>
-							<ul class="list_group group3">
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
+								<!--li><a href="#">Spending by region</a></li>
+								<li><a href="#">Spending by type</a></li-->
 							</ul>
 						</div>
 					</div>
 				</li>
-				<li class="drop_menu"><span><a href="#">Nav item 1</a></span>
-					<div class="drop_down">
-						<div class="inner">
-							<ul class="list_group group1">
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-							</ul>
-							<ul class="list_group group2">
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-							</ul>
-							<ul class="list_group group3">
-								<li><a href="#">Sub nav</a></li>
-								<li><a href="#">Sub nav</a></li>
-							</ul>
-						</div>
-					</div>
-				</li>
-				<li><span><a href="#">Nav item 3</a></span></li>
-				<li><span><a href="#">Nav item 4</a></span></li>
+				<li class="drop_menu"><span><a href="#" onclick="document.getElementById('mapboard').src = 'viz2.html';">Regional spending</a></span>			<li class="drop_menu"><span><a href="#" onclick="document.getElementById('mapboard').src = 'viz3.html';">Capital schemes</a></span>
+				<li class="drop_menu"><span><a href="#" onclick="document.getElementById('mapboard').src = 'viz6.html';">Completion dates</a></span>
+				<li class="drop_menu"><span><a href="#" onclick="document.getElementById('mapboard').src = 'viz9.html';">Assets, clustered</a></span>
 			</ul>
 		</nav>
 	</header>
 	
 	<div id="page">
     	<section>
-    	
-        </section>
+    	    <iframe id="mapboard" src="viz1.html" width = "100%" height = "700px"><iframe>
+	    </section>
 	</div><!--End page-->
 
 	<footer id="site_footer">
