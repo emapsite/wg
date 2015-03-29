@@ -129,10 +129,12 @@ div.cartodb-legend {
         .addTo(map)
         .on('done', function(layers) {
          
-           var sublayer0 = layers.getSubLayer(0);
-           sublayer0.on('featureClick', function (e, pos, latlng, data) {
-              //nothing yet
-           });           
+           //add search box
+           var v = cdb.vis.Overlay.create('search', map.viz, {})
+           v.show();
+           $('#map').append(v.render().el);
+           
+                     
            
         }).on('error', function(err) {
            console.log("The following error occured " + err);
