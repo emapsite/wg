@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Setting paragraphs' style conditionally, based on data</title>
+		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+		
+		var dataset = [];
+		
+		d3.csv('funding_by_la.csv', function(data){
+		       data.forEach(function(d){
+		           console.log(d['county']);
+		           dataset.push([d['total_cost'],d['county']]);
+		           
+		        });
+		       //count(); 
+		       pie();
+		   });
+		
+		
+			//var dataset = [ 5, 10, 15, 20, 25 ];
+			
+			function count(){
+			
+			    d3.select("body").selectAll("p")
+				    .data(dataset)
+				    .enter()
+				    .append("p")
+				    .text(function(d) {
+					    return "I can count up to " + d;
+			    	})
+				    .style("color", function(d) {
+					    if (d > 15) {	//Threshold of 15
+						    return "red";
+					    } else {
+						    return "black";
+					    }   
+				    });
+	            }
+	            
+	        function pie(){
+	        var w = 500;
+			var h = 500;
+
+			//var dataset = [ 5, 10, 20, 45, 6, 25, 100 ];
+
+			var outerRadius = w / 2;
+			var innerRadius = 0;
+			var arc = d3.svg.arc()
+							.innerRadius(innerRadius)
+							.outerRadius(outerRadius);
+			
+			var pie = d3.layout.pie();
+			
+			//Easy colors accessible via a 10-step ordinal scale
+			var color = d3.scale.category10();
+			//var color = d3.scale.linear()
+            //   .domain([0, 0.5, 1])
+            //   .range(["red", "white", "green"]);
+
+			//Create SVG element
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+			
+			//Set up groups
+			var arcs = svg.selectAll("g.arc")
+						  .data(pie(dataset.map(function(value, index){return value[0];})))
+						  .enter()
+						  .append("g")
+						  .attr("class", "arc")
+						  .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+			
+			//Draw arc paths
+			arcs.append("path")
+			    .attr("fill", function(d, i) {
+			    	return color(i);
+			    })
+			    .attr("d", arc);
+			
+			//Labels
+			arcs.append("text")
+			    .attr("transform", function(d, i) {
+			    	return "translate(" + arc.centroid(d.map(function(value, index){return value[0];})) + ")";
+			    })
+			    .attr("text-anchor", "middle")
+			    .text(function(d, i) {
+			    	return d[i][1].value;
+			    });
+	        }
+			
+		</script>
+	</body>
+</html>

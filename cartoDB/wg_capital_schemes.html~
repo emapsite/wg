@@ -1,0 +1,227 @@
+<html>
+<head>
+  <!-- cartoDB styles -->
+  <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" /> 
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v2/themes/css/cartodb.ie.css" />
+  <![endif]-->
+
+  <!-- Welsh Govt GEL -->
+  <link rel="stylesheet" href="../gel/cbin/css/reset.css">
+  <link rel="stylesheet" href="../gel/cbin/css/style.css">
+  <link type="text/css" href="../gel/cbin/css/print.css" media="print" rel="stylesheet">
+
+  <script src="../gel/cbin/js/libs/modernizr-2.5.3.min.js"></script>
+
+  
+  <style>
+   div.cartodb-legend .legend-title {
+  margin: 0 0 3px 0;
+  text-align:left;
+  color:#666;
+  font-weight:bold;
+  font-size:9px;
+  text-transform: uppercase;
+}
+
+div.cartodb-legend {
+  position:absolute;
+  bottom: 15px;
+  right: 15px;
+  padding: 3px 5px 4px 5px;
+
+  font:normal 13px "Helvetica",Arial;
+  color:#858585;
+  text-align: left;
+  webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+
+  border: 1px solid #999999;
+  background: white;
+  z-index: 105;
+}
+ 
+	    
+    html, body {width:100%; height:100%; padding: 0; margin: 0;}
+    #map { width: 100%; height:100%; background: white;}
+    
+    #layer_selector {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 0;
+      }
+ 
+      #layer_selector ul {
+        padding: 0; margin: 0;
+        list-style-type: none;
+      }
+ 
+      #layer_selector li {
+        border-bottom: 1px solid #999;
+        padding: 10px 10px;
+        font-family: "Helvetica", Arial;
+        font-size: 13px;
+        color: #444;
+        cursor: auto;
+      }
+ 
+      #layer_selector li:hover {
+        background-color: #F0F0F0;
+        cursor: pointer;
+      }
+ 
+      #layer_selector li.selected {
+        background-color: #EEE;
+      }
+
+      div.emapsite-infobox {
+	  padding: 1px;
+	  position: absolute;
+	  display: inline-block;
+	  -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0 0 4px 2px;
+	  -moz-box-shadow: rgba(0, 0, 0, 0.5) 0 0 4px 2px;
+	  box-shadow: rgba(0, 0, 0, 0.5) 0 0 4px 2px;
+	  background: white;
+	  -webkit-border-radius: 1px;
+	  -moz-border-radius: 1px;
+	  -ms-border-radius: 1px;
+	  -o-border-radius: 1px;
+	  border-radius: 2px;
+	  border: 2px solid #999999;
+	  text-align:left;
+	  z-index:105;
+     }
+   
+  </style>
+
+  <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+  <script>
+    var map;  
+
+
+    function init(){
+      // initiate leaflet map
+      map = new L.Map('map', { 
+        center: [53.09, -3.79],
+        zoom: 9,
+        maxZoom: 13,
+        minZoom: 9
+      });
+
+
+      //add some tiles      
+      /*
+      L.tileLayer('https://cartodb-wms.global.ssl.fastly.net/mapproxy/ws3_ws_emapsite_com_scaledependent_vector_EPSG_27700/wmts/map/webmercator/{z}/{x}/{y}.png', {
+          attribution: 'Ordnance Survey <a href="https://www.ordnancesurvey.co.uk/" target="_blank">Ordnance Survery</a>'
+      }).addTo(map);
+      */
+
+      
+      L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+          
+  
+      
+      //cartoDB visualization
+      var layerUrl = 'http://bugblatter1.cartodb.com/api/v2/viz/8e85fcae-d084-11e4-a74f-0e853d047bba/viz.json';
+
+      // change the query for the first layer
+      var subLayerOptions = {
+        /*sql: "SELECT * FROM iot_demo where adm0_a3 = 'USA'",
+        cartocss: "#example_cartodbjs_1{marker-fill: #109DCD; marker-width: 5; marker-line-color: white; marker-line-width: 0;}"*/
+      }
+
+      cartodb.createLayer(map, layerUrl)
+        .addTo(map)
+        .on('done', function(layers) {
+           //currently does nothing
+           layers.getSubLayer(0).set(subLayerOptions);
+
+           //setup layer selector handler
+           createLayerSelector(layers);
+          
+           //add handlers for the point layers
+           var sublayer1 = layers.getSubLayer(1);
+           sublayer1.on('featureClick', function(e, pos, latlng, data) {
+              console.log("You clicked " + data.cartodb_id);              
+           });
+
+           var sublayer2 = layers.getSubLayer(2);
+           sublayer2.on('featureClick', function (e, pos, latlng, data) {
+               //cartoDB seems to require a field called the_geom. to avoid having to pull back huge geometries when we only want to populate
+               //pie charts, we can use ST_Centroid(the_geom) as the geom
+               $.getJSON('https://bugblatter1.cartodb.com/api/v2/sql?format=GeoJSON&q=SELECT la, total_project, ST_Centroid(the_geom) as the_geom from wg_capital_schemes_geom_summary_by_la &api_key=a36647bedac6e46dbaed2c7d0eb72a5fbc0b162e',
+                  function(data) {
+                      $.each(data.features, function(key, value) {
+                           console.log(value);
+                      });
+                  });              
+           });           
+           
+        }).on('error', function(err) {
+           console.log("The following error occured " + err);
+        });     
+       
+    } 
+
+    
+    // handle layer selector
+    var selectedLayer;
+    function createLayerSelector(layers){
+       //sql handler
+       //var sql = new cartodb.SQL({});
+       
+      var num_sublayers = layers.getSubLayerCount();
+      var $options = $('#layer_selector li');
+      
+      $options.click(function(e) {
+        
+         var $li = $(e.target);       
+         var layerNum = parseInt($li.attr('id'))  ;
+         
+         if (selectedLayer != layerNum){
+             switch(layerNum){
+                 case 0:
+                     for (var i = 0; i < num_sublayers; i++){
+                        layers.getSubLayer(i).show();
+                     }
+                     break;
+                 default:
+                      for (var i = 0; i < num_sublayers; i++){
+                              layers.getSubLayer(i).hide();
+                      }              
+                      layers.getSubLayer(layerNum-1).show();
+		     // layers.getSubLayer(1).show();
+                      break;
+             }           
+          }          
+      });
+    }
+
+  </script>
+</head>
+
+<body onload="init()">
+  <!-- map div -->
+  <div id='map'></div>
+
+   <!-- custom layer selector -->
+   <div id="layer_selector" class="emapsite-infobox">
+      <ul>
+        <!--li id="0" class="selected">All layers</li-->
+        <li id="1" class="selected">Total Spending </li>
+        <li id="2">Welsh government</li>
+        <li id="3">Other spending</li>
+        <li id="4">Number of projects</li>
+      </ul>
+    </div>
+</body>
+</html>
