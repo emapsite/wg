@@ -134,7 +134,10 @@ div.cartodb-legend {
             
               var qs='SELECT sum(total_other_funding) as total_other_funding, sum(total_welsh_government_funding) as total_welsh_funding,';
               qs +='count(sector) as num_projects, dep_dir_name, sector, local_authority, st_makepoint(0,0) as the_geom ';
-              qs += ' FROM wg_cap_schemes_postcode_geocoded where local_authority = (SELECT la FROM localauthorities_hwm_region hwm, (select st_setsrid(st_makepoint(' + pos[1] + ',' + pos[0] + ' ), 4326) as geom) g where st_intersects(hwm.the_geom, g.geom))  group by  dep_dir_name, sector, local_authority';
+              qs += ' FROM wg_cap_schemes_postcode_geocoded WHERE local_authority = ';
+              qs += '(SELECT la FROM localauthorities_hwm_region hwm, (SELECT ST_SetSRID(st_makepoint(';
+              qs += pos[1] + ',' + pos[0] + ' ), 4326) as geom) g ';
+              qs += 'WHERE st_intersects(hwm.the_geom, g.geom))  GROUP BY  dep_dir_name, sector, local_authority';
               
              
               //need to pass in local authority
