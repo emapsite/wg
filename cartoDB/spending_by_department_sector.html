@@ -106,11 +106,14 @@ div.cartodb-legend {
         zoom: 9,
         maxZoom: 13,
         minZoom: 8
-      });
+      })
+      .on('click', function(e){
+           getData(e.latlng);
+       });
 
 
       //add some tiles      
-      L.tileLayer('https://cartodb-wms.global.ssl.fastly.net/mapproxy/ws3_ws_emapsite_com_OS_Scale_Dependent_EPSG_900913/wmts/map/webmercator/12/1998/1334.png', {
+      L.tileLayer('https://cartodb-wms.global.ssl.fastly.net/mapproxy/ws3_ws_emapsite_com_OS_Scale_Dependent_EPSG_900913/wmts/map/webmercator/{z}/{x}/{y}.png', {
           attribution: 'Ordnance Survey <a href="https://www.ordnancesurvey.co.uk/" target="_blank">Ordnance Survery</a>'
       }).addTo(map);
       
@@ -129,42 +132,42 @@ div.cartodb-legend {
         .addTo(map)
         .on('done', function(layers) {
          
-           var sublayer0 = layers.getSubLayer(0);
-           sublayer0.on('featureClick', function (e, pos, latlng, data) {
-              // console.log(data);
-               
-               //pie charts, we can use ST_Centroid(the_geom) as the geom
-               $.getJSON('https://bugblatter1.cartodb.com/api/v2/sql?format=GeoJSON&q=SELECT dep_dir_name as bar_input, sum(welsh_govt_spending) as welsh_govt, sum(total_other) as total_other, the_geom from top_5_wg_cap_schemes_postcode_geocoded_summary group by dep_dir_name, the_geom &api_key=a36647bedac6e46dbaed2c7d0eb72a5fbc0b162e',
-                  function(data) {                                    
-                      var arr = [];                      
-                      var d3_res = '';
-                      var counter = 0;
-                      $.each(data.features, function(key, value) {
-                          $.each(value.properties, function(key, value) { 
-                             if(key=='bar_input'){                                 
-                                 if (counter>0) 
-                                     d3_res += ',';
-                                 counter++;
-                                 d3_res += "{bar_input:'" + value + "', spending:{";
-                             }
-                             else
-                                 //convert to millions
-                                 arr.push(key + ":" + value/1000000);
-                             });		             
-                             d3_res += arr.join(',') + '}}\n';
-                             arr = [];//clear array
-                         });
-                         arr.push(d3_res);//convert to array that can be sent to d3
-                         console.log(d3_res); 
-                  });     
-                         
-           });           
-           
-        }).on('error', function(err) {
+           //var sublayer0 = layers.getSubLayer(0);
+           //sublayer0.on('featureClick', function(e, pos, latlng, data){
+           //     getData(e, pos, latlng, data)
+           //});
+        
+        })
+        .on('error', function(err) {
            console.log("The following error occured " + err);
         });     
-       
-    }   
+        
+        function getData(latlng){
+                       
+              var qs = 'SELECT array_to_json(array_agg(f)) as features ';
+              qs +='     FROM (SELECT dep_dir_name, sector, ';
+              qs +='       row_to_json((SELECT l FROM ';
+              qs +='       (SELECT sum(total_other_funding) as total_other_funding, sum(total_welsh_government_funding) as   total_welsh_governemt_funding) ';
+              qs +='     as l )) as total_spending ';
+              qs +='        FROM wg_cap_schemes_postcode_geocoded wg ';
+              qs +='         INNER JOIN ';
+              qs +='         (SELECT  la as local_authority '; 
+              qs +='         FROM localauthorities_hwm_region hwm, (SELECT ST_SetSRID(st_makepoint(';
+              qs +=            latlng.lng + ',' + latlng.lat + '), 4326) as geom) g ';
+              qs +='         WHERE  ST_Intersects(hwm.the_geom, g.geom)) auth ';
+              qs +='         ON  wg.local_authority = auth.local_authority ';
+              qs +='       GROUP BY  dep_dir_name, sector ';
+              qs +='   ) as f;';
+             
+             
+              //need to pass in local authority
+               $.getJSON('https://bugblatter1.cartodb.com/api/v2/sql?format=JSON&api_key=a36647bedac6e46dbaed2c7d0eb72a5fbc0b162e&q=' + qs,
+                  function(data) {   
+                      console.log(JSON.stringify(data.rows[0].features));                                 
+                   
+               });     
+        }       
+    }   //end init
 
   </script>
 </head>

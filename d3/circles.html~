@@ -32,10 +32,10 @@
 			var pie = d3.layout.pie();
 			
 			//Easy colors accessible via a 10-step ordinal scale
-			//var color = d3.scale.category10();
-			var color = d3.scale.linear()
-               .domain([0, 0.5, 1])
-               .range(["red", "white", "green"]);
+			var color = d3.scale.category10();
+			//var color = d3.scale.linear()
+            //   .domain([0, 0.5, 1])
+            //   .range(["red", "white", "green"]);
 
 			//Create SVG element
 			var svg = d3.select("body")
@@ -65,7 +65,7 @@
 			    })
 			    .attr("text-anchor", "middle")
 			    .text(function(d) {
-			    	return d.value + ' yo dude';
+			    	return d.value;
 			    });
 						
 		</script>
