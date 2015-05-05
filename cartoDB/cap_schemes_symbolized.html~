@@ -9,72 +9,72 @@
   
   <style>
    div.cartodb-legend .legend-title {
-     margin: 0 0 3px 0;
-     text-align:left;
-     color:#666;
-     font-weight:bold;
-     font-size:9px;
-     text-transform: uppercase;
-   }
+    margin: 0 0 3px 0;
+    text-align:left;
+    color:#666;
+    font-weight:bold;
+    font-size:9px;
+    text-transform: uppercase;
+}
 
-	div.cartodb-legend {
-	  position:absolute;
-	  bottom: 35px;
-	  right: 15px;
-	  padding: 3px 5px 4px 5px;
+div.cartodb-legend {
+  position:absolute;
+  bottom: 45px;
+  right: 15px;
+  padding: 3px 5px 4px 5px;
 
-	  font:normal 13px "Helvetica",Arial;
-	  color:#858585;
-	  text-align: left;
-	  webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
-	  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
-	  box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
-	  -webkit-border-radius: 4px;
-	  -moz-border-radius: 4px;
-	  -ms-border-radius: 4px;
-	  -o-border-radius: 4px;
-	  border-radius: 4px;
+  font:normal 13px "Helvetica",Arial;
+  color:#858585;
+  text-align: left;
+  webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
 
-	  border: 1px solid #999999;
-	  background: white;
-	  z-index: 105;
-	}
+  border: 1px solid #999999;
+  background: white;
+  z-index: 105;
+}
  
 	    
-    body {width:99%; height:99%; padding: 0; margin: 0; border: 2px solid black;}
-    #map { width: 100%; height:100%; background: white;}
+    html, body {width:100%; height:640px; padding: 0; margin: 0;}
+    #map { width: 100%; height:640px; background: white;}
     
     #layer_selector {
         position: absolute;
         top: 10px;
         right: 10px;
         padding: 0;
-    }
+      }
  
-    #layer_selector ul {
+      #layer_selector ul {
         padding: 0; margin: 0;
         list-style-type: none;
-    }
+      }
  
-    #layer_selector li {
+      #layer_selector li {
         border-bottom: 1px solid #999;
         padding: 10px 10px;
         font-family: "Helvetica", Arial;
         font-size: 13px;
         color: #444;
         cursor: auto;
-    }
+      }
  
-    #layer_selector li:hover {
+      #layer_selector li:hover {
         background-color: #F0F0F0;
         cursor: pointer;
-    }
+      }
  
-    #layer_selector li.selected {
+      #layer_selector li.selected {
         background-color: #EEE;
-    }
+      }
 
-    div.emapsite-infobox {
+      div.emapsite-infobox {
 	  padding: 1px;
 	  position: absolute;
 	  display: inline-block;
@@ -90,26 +90,25 @@
 	  border: 2px solid #999999;
 	  text-align:left;
 	  z-index:105;
-   }
+     }
    
   </style>
 
   <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
   <script>
     var map;  
-
+    var d3_results={};
 
     function init(){
       // initiate leaflet map
       map = new L.Map('map', { 
-        center: [53.09, -3.79],
+        center: [52.95, -3.59],
         zoom: 9,
-        maxZoom: 13,
-        minZoom: 9
+        maxZoom: 20,
+        minZoom: 8
       });
 
 
-      //add some tiles      
       //add some tiles      
       L.tileLayer('https://cartodb-wms.global.ssl.fastly.net/mapproxy/ws3_ws_emapsite_com_OS_Scale_Dependent_EPSG_900913/wmts/map/webmercator/{z}/{x}/{y}.png', {
           attribution: 'Ordnance Survey <a href="https://www.ordnancesurvey.co.uk/" target="_blank">Ordnance Survery</a>'
@@ -121,21 +120,27 @@
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       */    
-          
-  
-      
-      //cartoDB visualization
-      var layerUrl = 'http://bugblatter1.cartodb.com/api/v2/viz/cf79200e-d2e8-11e4-868c-0e853d047bba/viz.json';
 
-     
+      //cartoDB visualization
+      var layerUrl = 'http://bugblatter1.cartodb.com/api/v2/viz/bb8c0374-d48a-11e4-a338-0e0c41326911/viz.json';
+      
+
       cartodb.createLayer(map, layerUrl)
         .addTo(map)
         .on('done', function(layers) {
-                      
+         
+           //add search box
+           var v = cdb.vis.Overlay.create('search', map.viz, {})
+           v.show();
+           $('#map').append(v.render().el);
+           
+                     
+           
         }).on('error', function(err) {
            console.log("The following error occured " + err);
         });     
-   }
+       
+    }   
 
   </script>
 </head>
@@ -144,6 +149,5 @@
   <!-- map div -->
   <div id='map'></div>
 
-  
 </body>
 </html>
