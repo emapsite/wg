@@ -9,37 +9,37 @@
   
   <style>
    div.cartodb-legend .legend-title {
-  margin: 0 0 3px 0;
-  text-align:left;
-  color:#666;
-  font-weight:bold;
-  font-size:9px;
-  text-transform: uppercase;
-}
+	  margin: 0 0 3px 0;
+	  text-align:left;
+	  color:#666;
+	  font-weight:bold;
+	  font-size:9px;
+	  text-transform: uppercase;
+	}
 
-div.cartodb-legend {
-  position:absolute;
-  bottom: 15px;
-  right: 15px;
-  padding: 3px 5px 4px 5px;
+	div.cartodb-legend {
+	  position:absolute;
+	  bottom: 15px;
+	  right: 15px;
+	  padding: 3px 5px 4px 5px;
 
-  font:normal 13px "Helvetica",Arial;
-  color:#858585;
-  text-align: left;
-  webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
+	  font:normal 13px "Helvetica",Arial;
+	  color:#858585;
+	  text-align: left;
+	  webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+	  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+	  box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
+	  -webkit-border-radius: 4px;
+	  -moz-border-radius: 4px;
+	  -ms-border-radius: 4px;
+	  -o-border-radius: 4px;
+	  border-radius: 4px;
 
-  border: 1px solid #999999;
-  background: white;
-  z-index: 105;
-}
- 
+	  border: 1px solid #999999;
+	  background: white;
+	  z-index: 105;
+	}
+	 
 	    
     html, body {width:100%; height:100%; padding: 0; margin: 0;}
     #map { width: 100%; height:100%; background: white;}
@@ -108,20 +108,12 @@ div.cartodb-legend {
         minZoom: 9
       });
 
-
-      //add some tiles      
+           
       //add some tiles      
       L.tileLayer('https://cartodb-wms.global.ssl.fastly.net/mapproxy/ws3_ws_emapsite_com_OS_Scale_Dependent_EPSG_900913/wmts/map/webmercator/{z}/{x}/{y}.png', {
           attribution: 'Ordnance Survey <a href="https://www.ordnancesurvey.co.uk/" target="_blank">Ordnance Survery</a>'
       }).addTo(map);
       
-
-      /*
-      L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
-	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      }).addTo(map);
-      */    
-          
   
       
       //cartoDB visualization
@@ -133,7 +125,7 @@ div.cartodb-legend {
         cartocss: "#example_cartodbjs_1{marker-fill: #109DCD; marker-width: 5; marker-line-color: white; marker-line-width: 0;}"*/
       }
 
-      cartodb.createLayer(map, layerUrl)
+      cartodb.createLayer(map, layerUrl, {legends:false})
         .addTo(map)
         .on('done', function(layers) {
            //currently does nothing
@@ -191,6 +183,7 @@ div.cartodb-legend {
                  default:
                       for (var i = 0; i < num_sublayers; i++){
                               layers.getSubLayer(i).hide();
+                              layers.getSubLayer(i).legend.show();
                       }              
                       layers.getSubLayer(layerNum-1).show();
 		     // layers.getSubLayer(1).show();
@@ -213,7 +206,7 @@ div.cartodb-legend {
         <!--li id="0" class="selected">All layers</li-->
         <li id="1" class="selected">Total Spending </li>
         <li id="2">Welsh government</li>
-        <li id="3">Other spending</li>
+        <li id="3">Local government</li>
         <li id="4">Number of projects</li>
       </ul>
     </div>

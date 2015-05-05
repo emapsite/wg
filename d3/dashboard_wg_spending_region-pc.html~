@@ -191,7 +191,7 @@ function dashboard(id, fData, title){
         // create svg for pie chart.
         var piesvg = d3.select(id).append("svg")
             .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
-            .attr("transform", "translate("+pieDim.w/2+"," + pieDim.h/2 + 2 + ")");
+            .attr("transform", "translate("+pieDim.w/2+"," +pieDim.h/2 + ")");
  
         // create function to draw the arcs of the pie slices.
         var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
