@@ -44,7 +44,7 @@
    html, body {width:100%; height:640px; padding: 0; margin: 0;}
    #map { 
         float: left;
-        width: 59%; 
+        width: 69%; 
         height: 640px; 
         background: white; 
         border: solid black 1px;
@@ -55,7 +55,7 @@
    #charts{
        float: right;
        height: 640px;
-       width: 40%;
+       width: 30%;
        border: solid black 1px;
        top: 1px;
    }
@@ -78,22 +78,22 @@ rect:hover {  fill:blue; }
  
 .x.axis path {  display: none; }
 .legend{
-    margin-left: 40px;
-    margin-bottom:6px;
-    display:inline-block;
+    margin-left: 20px;
+    margin-bottom: 6px;
+    display: inline-block;
     border-collapse: collapse;
     border-spacing: 0px;
-    font:sans-serif;
+    font: Arial, Helvectica, sans-serif;
 }
 .legend td{
     padding:4px 5px;
     vertical-align:bottom;
-    font:sans-serif;
+    font: Arial, Helvectica, sans-serif;
 }
 .legendspending, .legendPerc{
-    align:right;
-    width:50px;
-    font:sans-serif;
+    align: right;
+    width: 50px;
+    font: Arial, Helvectica, sans-serif;
 }
    
   </style>
@@ -176,7 +176,7 @@ rect:hover {  fill:blue; }
                       console.log(JSON.stringify(data.rows[0].features));  
                       //update charts
                       if(data.rows[0].features !== null){
-                          dashboard('#charts', data.rows[0].features, "Spending by department, millions" );
+                          dashboard('#charts', data.rows[0].features, "Spending by department" );
                       }
       
               });     
@@ -248,8 +248,8 @@ function dashboard(id, fData, title){
     // function to handle histogram.
     function histoGram(fD){
         var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
-        hGDim.w = 300 - hGDim.l - hGDim.r,
-        hGDim.h = 280 - hGDim.t - hGDim.b;
+        hGDim.w = 280 - hGDim.l - hGDim.r,
+        hGDim.h = 320 - hGDim.t - hGDim.b;
  
         //create svg for histogram.
         var hGsvg = d3.select(id).append("svg")
@@ -265,7 +265,8 @@ function dashboard(id, fData, title){
         hGsvg.append("g").attr("class", "x axis")
             .attr("transform", "translate(0," + hGDim.h + ")")
             .call(d3.svg.axis().scale(x).orient("bottom"))
-          .selectAll(".tick text")
+            .selectAll(".tick text")
+            .style("font-family", "Arial")
             .call(wrap, x.rangeBand());
  
  
@@ -293,16 +294,18 @@ function dashboard(id, fData, title){
             .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
             .attr("y", function(d) { return y(d[1])-5; })
             .attr("text-anchor", "middle")
+            
  
  
         //Add title
        hGsvg.append("text")
           .attr("x", 10)            
-          .attr("y", -25)
+          .attr("y", -35)
           .attr("text-anchor", "left") 
-          .style("font-size", "20px")
+          .style("font-size", "17px")
           .style("text-decoration", "underline")
           .style("font-weight", "bold")
+          .style("font-family", "Arial")
           .text(title);
           //.call(wrap, hGDim.w);
  
@@ -347,7 +350,7 @@ function dashboard(id, fData, title){
  
     // function to handle pieChart.
     function pieChart(pD){
-        var pC ={},    pieDim = {w:300, h: 250};
+        var pC ={},    pieDim = {w: 220, h: 220};
         pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
  
         // create svg for pie chart.
@@ -399,7 +402,7 @@ function dashboard(id, fData, title){
         var leg = {};
  
         // create table for legend.
-        var legend = d3.select(id).append("table").attr('class','legend');
+        var legend = d3.select(id).append("table").attr('class', 'legend');
  
         // create one row per segment.
         var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
@@ -407,10 +410,12 @@ function dashboard(id, fData, title){
         // create the first column for each segment.
         tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
             .attr("width", '16').attr("height", '16')
-            .attr("fill",function(d){ return segColor(d.type); });
+            .attr("fill", function(d){ return segColor(d.type); });
  
         // create the second column for each segment -- formatting the text nicely
-        tr.append("td").text(function(d){ return d.type.replace(/_/g,' ')
+        tr.append("td")
+            .style("font-family", "Arial")
+            .text(function(d){ return d.type.replace(/_/g,' ')            
             .replace(/\w\S*/g, function(txt){ //nice formatting
                  return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
             });
@@ -418,10 +423,12 @@ function dashboard(id, fData, title){
  
         // create the third column for each segment.
         tr.append("td").attr("class",'legendFreq')
+            .style("font-family", "Arial")
             .text(function(d){ return d3.format(",.2f")(d.spending);});
  
         // create the fourth column for each segment.
         tr.append("td").attr("class",'legendPerc')
+            .style("font-family", "Arial")
             .text(function(d){ return getLegend(d,lD);});
  
         // Utility function to be used to update the legend.
