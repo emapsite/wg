@@ -382,14 +382,28 @@ nav#main_nav ul li {
 }
 
 nav#main_nav ul li.drop_menu:hover {
-	background:url(images/dropdown_top.png) 50% 105% no-repeat;
+	/*background:url(images/dropdown_top.png) 50% 105% no-repeat;*/
+   
+}
+
+nav#main_nav ul li.drop_menu:active {
+	/*background:url(images/dropdown_top.png) 50% 105% no-repeat;*/   
 }
 
 nav#main_nav ul li a{
-	padding:5px 0 5px 10px;
+	padding: 5px 0 5px 10px;
 	color: #353535;
-	display:block;
-	font-weight:bold;
+	display: block;
+	font-weight: bold;   
+}
+
+nav#main_nav ul li a.selected{
+    /* jpp */
+   	padding: 5px 0 5px 10px;
+	color: #353535;
+	display: block;
+	font-weight: bold; 
+    background: url(images/nav_bg_right_hover.png) right center no-repeat;   
 }
 
 .lang_cy nav#main_nav ul li a{
@@ -402,7 +416,7 @@ nav#main_nav ul li a{
 
 nav#main_nav ul li.drop_menu a{
 	padding:5px 20px 5px 10px;
-	background:url(images/nav_arrow.png) right 51% no-repeat;
+	/*background:url(images/nav_arrow.png) right 51% no-repeat;*/        
 }
 
 .lt-ie8 nav#main_nav ul li.drop_menu a{ 
@@ -410,7 +424,7 @@ nav#main_nav ul li.drop_menu a{
 }
 
 nav#main_nav ul li.selected{
-	background: url(images/nav_selected.png) center top no-repeat;
+	/*background: url(images/nav_selected.png) center top no-repeat;*/ 
 }
 
 nav#main_nav ul li span{
@@ -420,23 +434,26 @@ nav#main_nav ul li span{
 
 nav#main_nav ul li.selected span {
 	background: url(images/nav_bg_right.png) right center no-repeat;
+    color:red;
 }
 
 nav#main_nav ul li.selected.drop_menu span {
-	background: url(images/nav_bg_right_dropdown.png) right center no-repeat;
+	/*background: url(images/nav_bg_right_dropdown.png) right center no-repeat; */  
 }
 
 nav#main_nav ul li span:hover{
-	background: url(images/nav_bg_right_hover.png) right center no-repeat;
+	/*background: url(images/nav_bg_right_hover.png) right center no-repeat;*/
 }
 
 nav#main_nav ul li.drop_menu span:hover, nav#main_nav ul li.drop_menu span.active{
-	background: url(images/nav_bg_right_hover_dropdown.png) right center no-repeat;
+	background: url(images/nav_bg_right_hover.png) right center no-repeat; 
 }
 
 nav#main_nav ul li.selected span a{
-	background: url(images/nav_bg_left.png) left center no-repeat;
+	/*background: url(images/nav_bg_left.png) left center no-repeat;  */
+    
 }
+
 
 nav#main_nav ul li span:hover > a, nav#main_nav ul li span a.active{
 	background: url(images/nav_bg_left_hover.png) left center no-repeat;
