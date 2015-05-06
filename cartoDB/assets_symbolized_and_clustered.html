@@ -58,7 +58,7 @@
  
       #layer_selector li {
         border-bottom: 1px solid #999;
-        padding: 10px 10px;
+        padding: 7px 7px;
         font-family: "Helvetica", Arial;
         font-size: 13px;
         color: #444;
@@ -71,7 +71,8 @@
       }
  
       #layer_selector li.selected {
-        background-color: #EEE;
+        background-color: #101010;
+        color:white;
       }
 
       div.emapsite-infobox {
@@ -90,16 +91,16 @@
     	  -o-border-radius: 1px;
     	  border-radius: 2px;
     	  border: 2px solid #999999;
-    	  text-align:left;
-    	  z-index:105;
+    	  text-align: left;
+    	  z-index: 105;
      }
    
   </style>
 
   <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
   <script>
+    
     var map;  
-
 
     function init(){
       // initiate leaflet map
@@ -148,10 +149,11 @@
        
       var num_sublayers = layers.getSubLayerCount();
       var $options = $('#layer_selector li');      
-  
+     
       $options.click(function(e) {         
-        
-         var $li = $(e.target);       
+         $options.removeClass('selected');  
+         var $li = $(e.target);  
+         $li.addClass('selected');     
          var layerNum = parseInt($li.attr('id'))  ;
          
          if (selectedLayer != layerNum){
@@ -174,8 +176,8 @@
    <!-- custom layer selector -->
    <div id="layer_selector" class="emapsite-infobox">
       <ul>       
-        <li id="1">Assets</li>
-        <li id="2">Clusters</li>
+        <li id="1">ASSETS</li>
+        <li id="2" class="selected">CLUSTERS</li>
        </ul>
     </div>
 </body>
