@@ -215,9 +215,9 @@ function dashboard(id, fData, title){
            .key(function(d){return d.dep_dir_name;  })
            .rollup(function(v){
                 return {
-                    "Local": d3.sum(v, function(d){ 
+                    "local_gov": d3.sum(v, function(d){ 
                                           return d.spending.local_gov; }),
-                    "Wales": d3.sum(v, function(d){ 
+                    "welsh_gov": d3.sum(v, function(d){ 
                                          return d.spending.welsh_gov; }),
                     "Total": d3.sum(v, function(d){ 
                                           return d.spending.local_gov + d.spending.welsh_gov })
@@ -393,8 +393,8 @@ function dashboard(id, fData, title){
         // Utility function to be called on mouseover a pie slice.
         function mouseover(d){
             // call the update function of histogram with new data.
-            hG.update(fData.map(function(v){
-                return [v.dep_dir_name, v.spending[d.data.type]];}), segColor(d.data.type));
+            hG.update(sums.map(function(v){
+                return [v.dep_dir_name, v.values[d.data.type]];}), segColor(d.data.type));
         }
         //Utility function to be called on mouseout a pie slice.
         function mouseout(d){
