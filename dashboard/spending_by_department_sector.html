@@ -1,5 +1,7 @@
-<html>
+<!DOCTYPE html>  
+<meta charset="utf-8">
 <head>
+  
   <!-- cartoDB styles -->
   <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" /> 
   <!--[if lte IE 8]>
@@ -102,6 +104,7 @@ rect:hover {  fill:blue; }
   <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
   <script src = "https://code.jquery.com/jquery-2.1.3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <!--script src="http://d3js.org/d3.v3.js" charset="utf-8"></script--> 
   
   <script>
     var map;  
@@ -112,7 +115,7 @@ rect:hover {  fill:blue; }
        map = new L.Map('map', { 
          center: [53.09, -3.79],
          zoom: 9,
-         maxZoom: 13,
+         maxZoom: 17,
          minZoom: 8
       })
       .on('click', function(e){ // get dashboard data when clicking on region
@@ -131,13 +134,20 @@ rect:hover {  fill:blue; }
 
       cartodb.createLayer(map, layerUrl)
          .addTo(map)
-         .on('done', function(layers) {     
+         .on('done', function(layers) {  
+
+            //add search box
+            var v = cdb.vis.Overlay.create('search', map.viz, {})
+            v.show();
+            $('#map').append(v.render().el);   
             // initialize charts
             getData(null);
         })
         .on('error', function(err) {
             console.log("The following error occured " + err);
         });     
+
+      
         
         function getData(latlng){
               var qs;
@@ -216,11 +226,22 @@ function dashboard(id, fData, title){
            .rollup(function(v){
                 return {
                     "local_gov": d3.sum(v, function(d){ 
-                                          return d.spending.local_gov; }),
+                                         return d.spending.local_gov; }),
                     "welsh_gov": d3.sum(v, function(d){ 
-                                         return d.spending.welsh_gov; }),
-                    "Total": d3.sum(v, function(d){ 
-                                          return d.spending.local_gov + d.spending.welsh_gov })
+                                         return d.spending.welsh_gov; })
+                }
+            })   
+           .entries(fData);
+
+
+     var sums1 = d3.nest()
+           .key(function(d){return d.sector;  })
+           .rollup(function(v){
+                return {
+                    "local_gov": d3.sum(v, function(d){ 
+                                         return d.spending.local_gov; }),
+                    "welsh_gov": d3.sum(v, function(d){ 
+                                         return d.spending.welsh_gov; })
                 }
             })   
            .entries(fData);
@@ -248,14 +269,13 @@ function dashboard(id, fData, title){
     }
  
     // compute total spend value for each area.  
-    fData.forEach(function(d){
+    /*fData.forEach(function(d){
         d.total = 0;
        
         $.each(d.spending, function (key, value){
            d.total += value;          
-        });       
-        console.log(d.total);
-    });  
+        });
+    });  */
  
  
     // function to handle histogram.
@@ -285,7 +305,10 @@ function dashboard(id, fData, title){
  
         // Create function for y-axis map.
         var y = d3.scale.linear().range([hGDim.h, 0])
-                .domain([0, d3.max(fD, function(d) { return d[1]; })]);
+                .domain([0, d3.max(fD, function(d) {return d[1];})]);
+
+        //console.log(d3.max(fD, function(d) {console.log(d[1]); return d[1];}));
+        
  
         // Create bars for histogram to contain rectangles and freq labels.
         var bars = hGsvg.selectAll(".bar").data(fD).enter()
@@ -294,8 +317,8 @@ function dashboard(id, fData, title){
        
         //create the rectangles.
         bars.append("rect")
-            .attr("x", function(d) { console.log(x(d[0])); return x(d[0]); })
-            .attr("y", function(d) { console.log('y ' + d[1] + ' ' + y(d[1])); return y(d[1]); })
+            .attr("x", function(d) { return x(d[0]); })
+            .attr("y", function(d) { return y(d[1]); })
             .attr("width", x.rangeBand())
             .attr("height", function(d) { return hGDim.h - y(d[1]); })
             .attr('fill', barColor)
@@ -327,8 +350,16 @@ function dashboard(id, fData, title){
  
         function mouseover(d){  // utility function to be called on mouseover.
             // filter for selected dep_dir_name.
-            var st = fData.filter(function(s){ return s.dep_dir_name == d[0];})[0],
-                nD = d3.keys(st.spending).map(function(s){ return {type:s, spending:st.spending[s]};});
+            // filter for selected state.
+            var st = sums.filter(function(s){                   
+                    return s.key == d[0];})[0];
+           
+            var nD = d3.keys(st.values).map(function(s){ return {type: s, spending: st.values[s]};});
+              
+            var st = d3.keys(sums).filter(function(s) {
+                        return s == d[0];
+                   })[0];
+          
  
             // call update functions of pie-chart and legend.   
             pC.update(nD);
@@ -394,20 +425,20 @@ function dashboard(id, fData, title){
         function mouseover(d){
             // call the update function of histogram with new data.
             hG.update(sums.map(function(v){
-                return [v.dep_dir_name, v.values[d.data.type]];}), segColor(d.data.type));
+                return [v.key, v.values[d.data.type]];}), segColor(d.data.type));
         }
         //Utility function to be called on mouseout a pie slice.
         function mouseout(d){
             // call the update function of histogram with all data.
-            hG.update(fData.map(function(v){
-                return [v.dep_dir_name, v.total];}), barColor);
+            hG.update(sums.map(function(v){
+                return [v.key, v.values['welsh_gov'] + v.values['local_gov']]}), barColor);
         }
         // Animating the pie-slice requiring a custom function which specifies
         // how the intermediate paths should be drawn.
         function arcTween(a) {
             var i = d3.interpolate(this._current, a);
             this._current = i(0);
-            return function(t) { return arc(i(t));    };
+            return function(t) { return arc(i(t)); };
         }   
         return pC;
     }
@@ -475,8 +506,8 @@ function dashboard(id, fData, title){
     //var sF = fData.map(function(d){return [d.dep_dir_name, d.total];});
 
     //send total for each department
-    var sF = sums.map(function(d){
-        return [d.key, d.values.Total];
+    var sF = sums.map(function(d){        
+        return [d.key,  [d.values.welsh_gov + d.values.local_gov]];
     });
  
     var hG = histoGram(sF), // create the histogram.
