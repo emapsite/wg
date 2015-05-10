@@ -184,7 +184,7 @@
                       console.log(JSON.stringify(data.rows[0].features));  
                       //update charts
                       if(data.rows[0].features !== null){
-                          dashboard('#charts', data.rows[0].features, "Spending by department" );
+                          dashboard('#charts', data.rows[0].features, "Spending by department, " + data.rows[0].features[0].local_authority );
                       }
       
               });     
@@ -248,7 +248,7 @@ function dashboard(id, fData, title){
     // function to handle histogram.
     function histoGram(fD){
         var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
-        hGDim.w = 280 - hGDim.l - hGDim.r,
+        hGDim.w = 290 - hGDim.l - hGDim.r,
         hGDim.h = 320 - hGDim.t - hGDim.b;
  
         //create svg for histogram.
@@ -305,7 +305,7 @@ function dashboard(id, fData, title){
           .attr("x", 10)            
           .attr("y", -35)
           .attr("text-anchor", "left") 
-          .style("font-size", "17px")
+          .style("font-size", "14px")
           .style("text-decoration", "underline")
           .style("font-weight", "bold")
           .style("font-family", "Arial")
@@ -323,11 +323,6 @@ function dashboard(id, fData, title){
             var nD = d3.keys(st.values).map(function(s){
                  return {type: s, spending: st.values[s]};}
             );
-              
-            var st = d3.keys(sums).filter(function(s) {
-                         return s == d[0];
-             })[0];
-          
  
             // call update functions of pie-chart and legend.   
             pC.update(nD);
@@ -367,10 +362,10 @@ function dashboard(id, fData, title){
         var pC ={},    pieDim = {w: 220, h: 180};
         pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
  
-        // create svg for pie chart.
+        // create svg for pie chart. -- offset vertically by 10
         var piesvg = d3.select(id).append("svg")
             .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
-            .attr("transform", "translate(" +pieDim.w/2+ ", " +(pieDim.h/2+10)+ ")");
+            .attr("transform", "translate(" +pieDim.w/2+ ", " +(pieDim.h/2 + 10)+ ")");
  
         // create function to draw the arcs of the pie slices.
         var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
@@ -397,7 +392,7 @@ function dashboard(id, fData, title){
         }
         //Utility function to be called on mouseout a pie slice.
         function mouseout(d){
-            // call the update function of histogram with all data.
+            // call the update function of histogram with all data, summing two types of spending
             hG.update(sums.map(function(v){
                 return [v.key, v.values['welsh_gov'] + v.values['local_gov']]}), barColor);
         }
