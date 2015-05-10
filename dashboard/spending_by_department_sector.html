@@ -61,43 +61,41 @@
        border: solid black 1px;
        top: 1px;
    }
-    
-  
 
-path {  stroke: #fff; }
-path:hover {  opacity:0.9; }
-rect:hover {  fill:blue; }
-.axis {  font: 10px sans-serif; }
-.legend tr{  font: sans-serif; border-bottom:1px solid grey; }
-.legend tr:first-child{  font:sans-serif; border-top:1px solid grey; }
- 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
- 
-.x.axis path {  display: none; }
-.legend{
-    margin-left: 20px;
-    margin-bottom: 6px;
-    display: inline-block;
-    border-collapse: collapse;
-    border-spacing: 0px;
-    font: Arial, Helvectica, sans-serif;
-}
-.legend td{
-    padding:4px 5px;
-    vertical-align:bottom;
-    font: Arial, Helvectica, sans-serif;
-}
-.legendspending, .legendPerc{
-    align: right;
-    width: 50px;
-    font: Arial, Helvectica, sans-serif;
-}
-   
+	path {  stroke: #fff; }
+	path:hover {  opacity:0.9; }
+	rect:hover {  fill:blue; }
+	.axis {  font: 10px Arial, Helvectica, sans-serif; }
+	.legend tr{  font: Arial, Helvectica, sans-serif; border-bottom: 1px solid grey; }
+	.legend tr:first-child{  font: Arial, Helvectica, sans-serif; border-top:1px solid grey; }
+	 
+	.axis path,
+	.axis line {
+	  fill: none;
+	  stroke: #000;
+	  shape-rendering: crispEdges;
+	}
+	 
+	.x.axis path {  display: none; }
+	.legend{
+		margin-left: 20px;
+		margin-bottom: 6px;
+		display: inline-block;
+		border-collapse: collapse;
+		border-spacing: 0px;
+		font: Arial, Helvectica, sans-serif;
+	}
+	.legend td{
+		padding: 4px 5px;
+		vertical-align: bottom;
+		font: Arial, Helvectica, sans-serif;
+	}
+	.legendspending, .legendPerc{
+		align: right;
+		width: 50px;
+		font: Arial, Helvectica, sans-serif;
+	}
+	   
   </style>
 
   <!-- load cartodb, jquery, d3js -->
@@ -113,7 +111,7 @@ rect:hover {  fill:blue; }
     function init(){
        // initiate leaflet map
        map = new L.Map('map', { 
-         center: [53.09, -3.79],
+         center: [53.00, -3.79],
          zoom: 9,
          maxZoom: 17,
          minZoom: 8
@@ -203,24 +201,7 @@ var colours = ["#41ab5d", "#807dba", "#e08214", "#ff1515"];
  
 function dashboard(id, fData, title){
 
-    /*
-    var local_gov=0;
-    var welsh_gov=0;
-    
-    var sums = d3.nest()
-       .key(function(d) {
-             return d.dep_dir_name; 
-        })
-        .rollup(function(d){
-        return d3.sum(d, function(g){
-            local_gov += g.spending.local_gov;
-            welsh_gov += g.spending.welsh_gov;
-            return(g.spending.local_gov + g.spending.welsh_gov);
-        });
-      
-     })
-    .entries(fData);
-    */
+     //calc total spending by department/sector for local and welsh govt spending
      var sums = d3.nest()
            .key(function(d){return d.dep_dir_name;  })
            .rollup(function(v){
@@ -232,21 +213,7 @@ function dashboard(id, fData, title){
                 }
             })   
            .entries(fData);
-
-
-     var sums1 = d3.nest()
-           .key(function(d){return d.sector;  })
-           .rollup(function(v){
-                return {
-                    "local_gov": d3.sum(v, function(d){ 
-                                         return d.spending.local_gov; }),
-                    "welsh_gov": d3.sum(v, function(d){ 
-                                         return d.spending.welsh_gov; })
-                }
-            })   
-           .entries(fData);
-
-
+   
     //clear entire div of svg.
     $(id).empty();
 
@@ -275,7 +242,7 @@ function dashboard(id, fData, title){
         $.each(d.spending, function (key, value){
            d.total += value;          
         });
-    });  */
+    }); */
  
  
     // function to handle histogram.
@@ -305,9 +272,7 @@ function dashboard(id, fData, title){
  
         // Create function for y-axis map.
         var y = d3.scale.linear().range([hGDim.h, 0])
-                .domain([0, d3.max(fD, function(d) {return d[1];})]);
-
-        //console.log(d3.max(fD, function(d) {console.log(d[1]); return d[1];}));
+                .domain([0, d3.max(fD, function(d) {return +d[1];})]);
         
  
         // Create bars for histogram to contain rectangles and freq labels.
@@ -352,13 +317,16 @@ function dashboard(id, fData, title){
             // filter for selected dep_dir_name.
             // filter for selected state.
             var st = sums.filter(function(s){                   
-                    return s.key == d[0];})[0];
+                    return s.key == d[0];}
+            )[0];
            
-            var nD = d3.keys(st.values).map(function(s){ return {type: s, spending: st.values[s]};});
+            var nD = d3.keys(st.values).map(function(s){
+                 return {type: s, spending: st.values[s]};}
+            );
               
             var st = d3.keys(sums).filter(function(s) {
-                        return s == d[0];
-                   })[0];
+                         return s == d[0];
+             })[0];
           
  
             // call update functions of pie-chart and legend.   
@@ -375,7 +343,7 @@ function dashboard(id, fData, title){
         // create function to update the bars. This will be used by pie-chart.
         hG.update = function(nD, color){
             // update the domain of the y-axis map to reflect change in frequencies.
-            y.domain([0, d3.max(nD, function(d) { return d[1]; })]);
+            y.domain([0, d3.max(nD, function(d) { return +d[1]; })]);
  
             // Attach the new data to the bars.
             var bars = hGsvg.selectAll(".bar").data(nD);
@@ -396,13 +364,13 @@ function dashboard(id, fData, title){
  
     // function to handle pieChart.
     function pieChart(pD){
-        var pC ={},    pieDim = {w: 220, h: 220};
+        var pC ={},    pieDim = {w: 220, h: 180};
         pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
  
         // create svg for pie chart.
         var piesvg = d3.select(id).append("svg")
             .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
-            .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
+            .attr("transform", "translate(" +pieDim.w/2+ ", " +(pieDim.h/2+10)+ ")");
  
         // create function to draw the arcs of the pie slices.
         var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
