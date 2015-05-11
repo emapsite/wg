@@ -225,7 +225,7 @@
                 qs = 'SELECT array_to_json(array_agg(f)) as features ';
                 qs +='     FROM (SELECT dep_dir_name, sector, auth.local_authority,';
                 qs +='       row_to_json((SELECT l FROM ';
-                qs +='       (SELECT sum(total_other_funding)/1000000 as "local_gov", sum(total_welsh_government_funding)/1000000 as   "welsh_gov") ';
+                qs +='       (SELECT sum(total_other_funding)/1000000 as "other", sum(total_welsh_government_funding)/1000000 as   "welsh_gov") ';
                 qs +='     as l )) as spending ';
                 qs +='        FROM wg_cap_schemes_postcode_geocoded wg ';	       
                 qs +='         INNER JOIN ';
@@ -240,7 +240,7 @@
                 qs = 'SELECT array_to_json(array_agg(f)) as features ';
                 qs +='     FROM (SELECT dep_dir_name, sector, \'Wales\' as local_authority,';
                 qs +='       row_to_json((SELECT l FROM ';
-                qs +='       (SELECT sum(total_other_funding)/1000000 as "local_gov", sum(total_welsh_government_funding)/1000000 as   "welsh_gov") ';
+                qs +='       (SELECT sum(total_other_funding)/1000000 as "other", sum(total_welsh_government_funding)/1000000 as   "welsh_gov") ';
                 qs +='     as l )) as spending ';
                 qs +='        FROM wg_cap_schemes_postcode_geocoded wg GROUP BY dep_dir_name, sector ';
               } //add order by  
@@ -284,8 +284,8 @@ function dashboard(id, fData, title, dep_or_sector){
            .key(function(d){return (dep_or_sector=='department' ? d.dep_dir_name : d.sector);  })
            .rollup(function(v){
                 return {
-                    "local_gov": d3.sum(v, function(d){ 
-                                         return d.spending.local_gov; }),
+                    "other": d3.sum(v, function(d){ 
+                                         return d.spending.other; }),
                     "welsh_gov": d3.sum(v, function(d){ 
                                          return d.spending.welsh_gov; })
                 }
@@ -473,7 +473,7 @@ function dashboard(id, fData, title, dep_or_sector){
         function mouseout(d){
             // call the update function of histogram with all data, summing two types of spending
             hG.update(sums.map(function(v){
-                return [v.key, v.values['welsh_gov'] + v.values['local_gov']]}), barColor);
+                return [v.key, v.values['welsh_gov'] + v.values['other']]}), barColor);
         }
         // Animating the pie-slice requiring a custom function which specifies
         // how the intermediate paths should be drawn.
@@ -549,7 +549,7 @@ function dashboard(id, fData, title, dep_or_sector){
    
     //send total for each department
     var sF = sums.map(function(d){        
-        return [d.key,  [d.values.welsh_gov + d.values.local_gov]];
+        return [d.key,  [d.values.welsh_gov + d.values.other]];
     });
  
     var hG = histoGram(sF), // create the histogram.
