@@ -36,7 +36,7 @@
     function histoGram(fD){
         var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 5};
         hGDim.w = 300 - hGDim.l - hGDim.r,
-        hGDim.h = 320 - hGDim.t - hGDim.b;
+        hGDim.h = 340 - hGDim.t - hGDim.b;
  
         //create svg for histogram.
         var hGsvg = d3.select(id).append("svg")
@@ -136,13 +136,13 @@
  
     // function to handle pieChart.
     function pieChart(pD){
-        var pC ={},    pieDim = {w:180, h: 180};
+        var pC ={},    pieDim = {w: 160, h: 160, lofs: 60, tofs: 50};
         pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
  
         // create svg for pie chart.
         var piesvg = d3.select(id).append("svg")
-            .attr("width", pieDim.w).attr("height", pieDim.h + 20).append("g")
-            .attr("transform", "translate(" +(pieDim.w/2 + 10)+ "," +(pieDim.h/2+10 )+ ")");
+            .attr("width", pieDim.w + pieDim.lofs).attr("height", pieDim.h + pieDim.tofs).append("g")
+            .attr("transform", "translate(" +(pieDim.w/2 + pieDim.lofs)+ "," +(pieDim.h/2 + pieDim.tofs )+ ")");
  
         // create function to draw the arcs of the pie slices.
         var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
@@ -188,7 +188,11 @@
         var leg = {};
  
         // create table for legend.
-        var legend = d3.select(id).append("table").attr('class','legend');
+        var legend = d3.select(id).append("table").attr('class', 'legend')
+            .attr('class', 'legend')
+            .style('position', 'relative')
+            .style('left', '20px')
+            .style('margin-top', '22px');
  
         // create one row per segment.
         var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
@@ -196,10 +200,10 @@
         // create the first column for each segment.
         tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
             .attr("width", '16').attr("height", '16')
-                        .attr("fill",function(d){ return segColor(d.type); });
+            .attr("fill", function(d){ return segColor(d.type); });
  
         // create the second column for each segment -- formatting the text nicely
-        tr.append("td").text(function(d){ return d.type.replace('_',' ')
+        tr.append("td").text(function(d){ return d.type.replace('_',' ')            
             .replace(/\w\S*/g,function(txt){ //nice formatting
                  return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
             });

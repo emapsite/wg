@@ -11,8 +11,8 @@ function sector_dashboard(id, fData, title){
            .key(function(d){return d.sector;  })
            .rollup(function(v){
                 return {
-                    "local_gov": d3.sum(v, function(d){ 
-                                         return d.spending.local_gov; }),
+                    "other": d3.sum(v, function(d){ 
+                                         return d.spending.other; }),
                     "welsh_gov": d3.sum(v, function(d){ 
                                          return d.spending.welsh_gov; })
                 }
@@ -170,8 +170,8 @@ function sector_dashboard(id, fData, title){
  
         // create svg for pie chart. -- offset vertically by 10
         var piesvg = d3.select(id).append("svg")
-            .attr("width", pieDim.w+40).attr("height", pieDim.h+40).append("g")
-            .attr("transform", "translate(" +(pieDim.w/2 + 20 ) + ", " +(pieDim.h/2 -10)+ ")");
+            .attr("width", pieDim.w+20).attr("height", pieDim.h+90).append("g")
+            .attr("transform", "translate(" +(pieDim.w/2 + 30 ) + ", " +(pieDim.h/2 - 10)+ ")");
  
         // create function to draw the arcs of the pie slices.
         var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
@@ -183,7 +183,8 @@ function sector_dashboard(id, fData, title){
         piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc)
             .each(function(d) { this._current = d; })
             .style("fill", function(d) { return segColor(d.data.type); })
-            .on("mouseover", mouseover).on("mouseout",mouseout);
+            .on("mouseover", mouseover)
+            .on("mouseout", mouseout);
  
         // create function to update pie-chart. This will be used by histogram.
         pC.update = function(nD){
@@ -200,7 +201,7 @@ function sector_dashboard(id, fData, title){
         function mouseout(d){
             // call the update function of histogram with all data, summing two types of spending
             hG.update(sums.map(function(v){
-                return [v.key, v.values['welsh_gov'] + v.values['local_gov']]}), barColor);
+                return [v.key, v.values['welsh_gov'] + v.values['other']]}), barColor);
         }
         // Animating the pie-slice requiring a custom function which specifies
         // how the intermediate paths should be drawn.
@@ -217,7 +218,11 @@ function sector_dashboard(id, fData, title){
         var leg = {};
  
         // create table for legend.
-        var legend = d3.select(id).append("table").attr('class', 'legend_bottom');
+        var legend = d3.select(id).append("table")
+            .attr('class', 'legend')
+            .style('position', 'relative')
+            .style('left', '320px')
+            .style('bottom', '80px');
  
         // create one row per segment.
         var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
@@ -228,9 +233,8 @@ function sector_dashboard(id, fData, title){
             .attr("fill", function(d){ return segColor(d.type); });
  
         // create the second column for each segment -- formatting the text nicely
-        tr.append("td")
-            .style("font-family", "Arial")
-            .text(function(d){ return d.type.replace(/_/g,' ')            
+        tr.append("td")            
+            .text(function(d){ return d.type.replace(/_/g,' ')
             .replace(/\w\S*/g, function(txt){ //nice formatting
                  return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
             });
@@ -244,7 +248,7 @@ function sector_dashboard(id, fData, title){
         // create the fourth column for each segment.
         tr.append("td").attr("class",'legendPerc')
             .style("font-family", "Arial")
-            .text(function(d){ return getLegend(d,lD);});
+            .text(function(d){ return getLegend(d, lD);});
  
         // Utility function to be used to update the legend.
         leg.update = function(nD){
@@ -276,7 +280,7 @@ function sector_dashboard(id, fData, title){
    
     //send total for each department
     var sF = sums.map(function(d){        
-        return [d.key,  [d.values.welsh_gov + d.values.local_gov]];
+        return [d.key,  [d.values.welsh_gov + d.values.other]];
     });
  
     var hG = histoGram(sF), // create the histogram.
@@ -310,6 +314,6 @@ function wrap(text, width) {
 }
 
 
-var freqDataSec = [{"dep_dir_name":"Economy, Science and Transport","sector":"Economic Development","local_authority":"Wales","spending":{"local_gov":368,"welsh_gov":70}},{"dep_dir_name":"Economy, Science and Transport","sector":"Heritage ","local_authority":"Wales","spending":{"local_gov":34,"welsh_gov":22}},{"dep_dir_name":"Economy, Science and Transport","sector":"Transport","local_authority":"Wales","spending":{"local_gov":0,"welsh_gov":334}},{"dep_dir_name":"Education and Skills","sector":"Education","local_authority":"Wales","spending":{"local_gov":48,"welsh_gov":70}},{"dep_dir_name":"Environment and Sustainable Development","sector":"Environment","local_authority":"Wales","spending":{"local_gov":9,"welsh_gov":53}},{"dep_dir_name":"Health and Social Services","sector":"Health","local_authority":"Wales","spending":{"local_gov":0,"welsh_gov":369}},{"dep_dir_name":"Local Government and Communities","sector":"Housing & Regeneration","local_authority":"Wales","spending":{"local_gov":98,"welsh_gov":113}}];
+var freqDataSec = [{"dep_dir_name":"Economy, Science and Transport","sector":"Economic Development","local_authority":"Wales","spending":{"other":368,"welsh_gov":70}},{"dep_dir_name":"Economy, Science and Transport","sector":"Heritage ","local_authority":"Wales","spending":{"other":34,"welsh_gov":22}},{"dep_dir_name":"Economy, Science and Transport","sector":"Transport","local_authority":"Wales","spending":{"other":0,"welsh_gov":334}},{"dep_dir_name":"Education and Skills","sector":"Education","local_authority":"Wales","spending":{"other":48,"welsh_gov":70}},{"dep_dir_name":"Environment and Sustainable Development","sector":"Environment","local_authority":"Wales","spending":{"other":9,"welsh_gov":53}},{"dep_dir_name":"Health and Social Services","sector":"Health","local_authority":"Wales","spending":{"other":0,"welsh_gov":369}},{"dep_dir_name":"Local Government and Communities","sector":"Housing & Regeneration","local_authority":"Wales","spending":{"other":98,"welsh_gov":113}}];
  
 

@@ -120,9 +120,7 @@
 	path:hover { opacity:0.9; }
 	rect:hover { fill:blue; }
 	.axis { font: 10px Arial, Helvectica, sans-serif; }
-	.legend tr{ font: Arial, Helvectica, sans-serif; border-bottom:1px solid grey; }
-	.legend tr:first-child{ font: Arial, Helvectica, sans-serif; border-top:1px solid grey; }
-	 
+	
 	.axis path,
 	.axis line {
 	  fill: none;
@@ -138,23 +136,37 @@
 		border-collapse: collapse;
 		border-spacing: 0px;
 	}
-    .legend_bottom{
-		
-		margin-left:360px;
-        margin-top:10px;
+/*
+    .legend_bottom{		
+        position: absolute;
+        left: 350px;
+        bottom: 40px;
+		margin-left: 10px;
+        margin-top: 10px;
 		display:inline-block;
 		border-collapse: collapse;
 		border-spacing: 0px;
 	}
+*/
 	.legend td{
-		padding:4px 5px;
-		vertical-align:bottom;
+		padding: 4px 5px;
+		vertical-align: bottom;
         font: Arial, Helvectica, sans-serif;
-	}
+	}    
+    
+    .legend tr { 
+        font: Arial, Helvectica, sans-serif; 
+        border-bottom:1px solid grey; 
+    }   
+	.legend tr:first-child{ 
+        font: Arial, Helvectica, sans-serif; 
+        border-top:1px solid grey; 
+    }	
 	.legendspending, .legendPerc{
 		align:right;
 		width:50px;
         font: Arial, Helvectica, sans-serif;
+    }
 	   
   </style>
 
@@ -179,6 +191,9 @@
         zoom: 8,
         maxZoom: 13,
         minZoom: 8
+      })
+      .on('click', function(e){
+         console.log(e.latlng);
       });
 
            
