@@ -44,6 +44,8 @@
 	  text-transform: uppercase;
 	}
 
+   /* shrink legends, so they fit */
+
 	div.cartodb-legend {	  
 
 	  font: normal 7px Arial, Helvetica, sans-serif;
@@ -212,7 +214,7 @@
         minZoom: 8
       })
       .on('click', function(e){
-         console.log(e.latlng);
+         //console.log(e.latlng);
       });
 
            
@@ -234,7 +236,10 @@
           
            //add handlers for the point layers
            var sublayer0 = layers.getSubLayer(0);
+           
            sublayer0.on('featureClick', function(e, pos, latlng, data) {
+               //highlight selected la
+               showFeature(pos);
                //prevent map click being fired also
                e.stopPropagation();    
                var qs = get_gov_qs(L.latLng(pos[0], pos[1]));               
@@ -242,14 +247,38 @@
                   function(data) {                        
                       //refresh charts
                       sector_dashboard('#charts_bottom', data.rows[0].features, "Sector spending by local authority (£m), " + data.rows[0].features[0].local_authority  ); 
-               });  
-           });
-           
+               })
+            })
         }).on('error', function(err) {
            console.log("The following error occured " + err);
         });     
        
     } 
+
+    var polygon;
+    //function to highlight la
+    function showFeature(pos) {
+        
+          var qs='SELECT ST_Simplify(the_geom, 0.005) as the_geom FROM wg_capital_schemes_geom_summary_by_la wg, '
+          qs += '(SELECT ST_SetSRID(st_makepoint('+ pos[1] + ',' + pos[0] + '), 4326) as geom) g ';
+          qs += 'WHERE ST_Intersects(wg.the_geom, g.geom)';
+
+          
+          $.getJSON('https://bugblatter1.cartodb.com/api/v2/sql?format=GeoJSON&api_key=a36647bedac6e46dbaed2c7d0eb72a5fbc0b162e&q=' + qs,
+              function(geojson) {
+                 if (polygon) {
+                   map.removeLayer(polygon);
+                 }
+                 polygon = L.geoJson(geojson, { 
+              		style: {
+                	  color: "#ff0000",
+                      fillColor: "#000",
+                      weight: 5,
+                      opacity: 0.5                   					
+              	    }
+                }).addTo(map);
+            });
+        }
 
     
     // handle layer selector
