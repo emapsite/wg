@@ -241,12 +241,17 @@
     // handle layer selector
     var selectedLayer;
     function createLayerSelector(layers){
-       //sql handler
-       //var sql = new cartodb.SQL({});
-       
+      //keep record of layers        
       var num_sublayers = layers.getSubLayerCount();
+      //get a ref to layer selector
       var $options = $('#layer_selector li');
       
+      //turn off all layers except first one.
+      for (var i = 0; i < num_sublayers; i++){
+         layers.getSubLayer(i).hide();
+      }              
+      layers.getSubLayer(0).show();
+
       $options.click(function(e) {     
          //turn off selected on all buttons   
          $options.removeClass('selected');
