@@ -235,7 +235,7 @@
                       //update charts
                       if(data.rows[0].features !== null){
                           emap.data = data.rows[0].features;
-                          emap.title = "Spending by " + emap.dep_or_sector + ', ' + data.rows[0].features[0].local_authority;
+                          emap.title = "Spending by " + emap.dep_or_sector + ' (£m), ' + data.rows[0].features[0].local_authority;
                           dashboard('#charts', emap.data, emap.title, emap.dep_or_sector );
                       }
       
