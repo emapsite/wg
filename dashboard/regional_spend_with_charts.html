@@ -12,7 +12,7 @@
    #map { 
         float: left;
         width: 66%; 
-        height: 350px; 
+        height: 330px; 
         background: white; 
         border: solid black 1px;
 	    margin: 1px 1px 1px 1px;
@@ -28,7 +28,7 @@
 
    #charts_bottom{
        float: left;
-       height: 289px;
+       height: 309px;
        width: 66%;
        border: solid black 1px;       
        margin: 1px 1px 0px 1px;
@@ -119,9 +119,9 @@
 	path { stroke: #fff; }
 	path:hover { opacity:0.9; }
 	rect:hover { fill:blue; }
-	.axis { font: 10px sans-serif; }
-	.legend tr{ border-bottom:1px solid grey; }
-	.legend tr:first-child{ border-top:1px solid grey; }
+	.axis { font: 10px Arial, Helvectica, sans-serif; }
+	.legend tr{ font: Arial, Helvectica, sans-serif; border-bottom:1px solid grey; }
+	.legend tr:first-child{ font: Arial, Helvectica, sans-serif; border-top:1px solid grey; }
 	 
 	.axis path,
 	.axis line {
@@ -138,13 +138,23 @@
 		border-collapse: collapse;
 		border-spacing: 0px;
 	}
+    .legend_bottom{
+		
+		margin-left:360px;
+        margin-top:10px;
+		display:inline-block;
+		border-collapse: collapse;
+		border-spacing: 0px;
+	}
 	.legend td{
 		padding:4px 5px;
 		vertical-align:bottom;
+        font: Arial, Helvectica, sans-serif;
 	}
 	.legendspending, .legendPerc{
 		align:right;
 		width:50px;
+        font: Arial, Helvectica, sans-serif;
 	   
   </style>
 
@@ -155,6 +165,8 @@
 
   <!-- dashboard js -->
   <script src="js/region_by_cap_dashboard.js"></script>
+  <script src="js/region_by_sector_dashboard.js"></script>
+  
   
   <script>
     var map;  
@@ -249,6 +261,7 @@
 
      //initialize dashboards
      dashboard('#charts_right', freqData, "Spending by region per capita" );
+     sector_dashboard('#charts_bottom', freqDataSec, "Sector spending by local authority" );
     }
     </script>
 

@@ -1,8 +1,9 @@
-   //colour lookup table
-   var colours = ["#41ab5d", "#807dba", "#e08214", "#ff1515"];
- 
+  
  
    function dashboard(id, fData, title){
+
+    //colour lookup table
+    var colours = ["#41ab5d", "#807dba", "#e08214", "#ff1515"];
  
     //get category headers, so we can pass generic column names  
     var headers = [];
@@ -35,7 +36,7 @@
     function histoGram(fD){
         var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 5};
         hGDim.w = 300 - hGDim.l - hGDim.r,
-        hGDim.h = 300 - hGDim.t - hGDim.b;
+        hGDim.h = 320 - hGDim.t - hGDim.b;
  
         //create svg for histogram.
         var hGsvg = d3.select(id).append("svg")
@@ -78,6 +79,8 @@
             .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
             .attr("y", function(d) { return y(d[1])-5; })
             .attr("text-anchor", "middle")
+            .style("font-family", "Arial") 
+            .style("font-size", "12px")
  
  
         //Add title
@@ -85,9 +88,10 @@
           .attr("x", 5)            
           .attr("y", -35)
           .attr("text-anchor", "left") 
-          .style("font-size", "16px")
+          .style("font-size", "14px")
           .style("text-decoration", "underline")
           .style("font-weight", "bold")
+          .style("font-family", "Arial")
           .text(title)
           .call(wrap, hGDim.w);
  
@@ -132,13 +136,13 @@
  
     // function to handle pieChart.
     function pieChart(pD){
-        var pC ={},    pieDim = {w:220, h: 220};
+        var pC ={},    pieDim = {w:180, h: 180};
         pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
  
         // create svg for pie chart.
         var piesvg = d3.select(id).append("svg")
-            .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
-            .attr("transform", "translate(" +(pieDim.w/2 + 10)+ "," +pieDim.h/2 + ")");
+            .attr("width", pieDim.w).attr("height", pieDim.h + 20).append("g")
+            .attr("transform", "translate(" +(pieDim.w/2 + 10)+ "," +(pieDim.h/2+10 )+ ")");
  
         // create function to draw the arcs of the pie slices.
         var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
@@ -203,10 +207,12 @@
  
         // create the third column for each segment.
         tr.append("td").attr("class",'legendFreq')
+            .style("font-family", "Arial")
             .text(function(d){ return d3.format(",.2f")(d.spending);});
  
         // create the fourth column for each segment.
         tr.append("td").attr("class",'legendPerc')
+            .style("font-family", "Arial")
             .text(function(d){ return getLegend(d,lD);});
  
         // Utility function to be used to update the legend.

@@ -188,8 +188,7 @@
          .on('done', function(layers) {  
 
            //setup layer selector
-           createLayerSelector();
-                
+           createLayerSelector();                
 
             //add search box
             var v = cdb.vis.Overlay.create('search', map.viz, {})
@@ -270,11 +269,12 @@
 
   <script>
 
-//colour lookup table
-var colours = ["#41ab5d", "#807dba", "#e08214", "#ff1515"];
- 
+
  
 function dashboard(id, fData, title, dep_or_sector){
+
+   //colour lookup table
+   var colours = ["#41ab5d", "#807dba", "#e08214", "#ff1515"];
 
     //clear entire svg content.
     $(id).empty();
@@ -444,7 +444,7 @@ function dashboard(id, fData, title, dep_or_sector){
         // create svg for pie chart. -- offset vertically by 10
         var piesvg = d3.select(id).append("svg")
             .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
-            .attr("transform", "translate(" +pieDim.w/2+ ", " +(pieDim.h/2 + 10)+ ")");
+            .attr("transform", "translate(" +pieDim.w/2 + ", " +(pieDim.h/2 + 10)+ ")");
  
         // create function to draw the arcs of the pie slices.
         var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
