@@ -223,7 +223,7 @@
                $.getJSON('https://bugblatter1.cartodb.com/api/v2/sql?format=JSON&api_key=a36647bedac6e46dbaed2c7d0eb72a5fbc0b162e&q=' + qs,
                   function(data) {                        
                       //refresh charts
-                      sector_dashboard('#charts_bottom', data.rows[0].features, "Sector spending by local authority, " + data.rows[0].features[0].local_authority  ); 
+                      sector_dashboard('#charts_bottom', data.rows[0].features, "Sector spending by local authority (£m), " + data.rows[0].features[0].local_authority  ); 
                });  
            });
            
@@ -277,7 +277,7 @@
 
      //initialize dashboards
      dashboard('#charts_right', freqData, "Spending by region per capita" );
-     sector_dashboard('#charts_bottom', freqDataSec, "Sector spending by local authority" );
+     sector_dashboard('#charts_bottom', freqDataSec, "Sector spending by local authority (£m)" );
     }
     </script>
 
