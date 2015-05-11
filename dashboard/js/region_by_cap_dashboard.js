@@ -281,13 +281,13 @@
 	 
 
 	var freqData = [
-		{bar_input:'Conwy', spending: {welsh_gov: 15.17, other: 4.66}},
-		{bar_input:'Denbighshire', spending: {welsh_gov: 22.73, other: 2.27}},
-		{bar_input:'Flintshire', spending: {welsh_gov: 5.63, other: 21.29}},
-		{bar_input: 'Gwynedd', spending: {welsh_gov: 26.25, other: 4.68}},
-		{bar_input:'Isle of Anglesey', spending: {welsh_gov: 6.76, other: 11.23}},   
+		{bar_input:'Conwy', spending: {other: 468.84, welsh_gov: 1524.65 }},
+		{bar_input:'Denbighshire', spending: {other: 229.55, welsh_gov: 2287.84}},
+		{bar_input:'Flintshire', spending: { other: 2136.39, welsh_gov: 565.2}},
+		{bar_input: 'Gwynedd', spending: {other: 469.38, welsh_gov: 2634,39}},
+		{bar_input:'Isle of Anglesey', spending: {other: 1126.4, welsh_gov: 678.2}},   
 		//{bar_input:'Regional', spending: {welsh_gov: 2680, other: 1234}}, 
-		{bar_input:'Wrexham', spending: {welsh_gov: 11.94, other: 1.68}}
+		{bar_input:'Wrexham', spending: {other: 170.21, welsh_gov: 1206.03}}
 	 
 	 
 	];
