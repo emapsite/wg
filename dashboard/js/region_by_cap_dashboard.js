@@ -279,6 +279,10 @@
 	  });
 	}
 	 
+   /* Todo. Put this query in to make dynamic
+   SELECT sum(total_other_funding)/population as other, sum(total_welsh_government_funding)/population as welsh_gov, population, la
+   FROM wg_cap_schemes_postcode_geocoded_copy_merge where population is not null group by la, population order by LA
+   /*
 
 	var freqData = [
 		{bar_input:'Conwy', spending: {other: 468.84, welsh_gov: 1524.65 }},
