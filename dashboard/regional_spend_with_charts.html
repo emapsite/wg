@@ -207,7 +207,7 @@
       var layerUrl = 'http://bugblatter1.cartodb.com/api/v2/viz/8e85fcae-d084-11e4-a74f-0e853d047bba/viz.json';
 
    
-      cartodb.createLayer(map, layerUrl, {legends:false})
+      cartodb.createLayer(map, layerUrl/*, {legends:false}*/)
         .addTo(map)
         .on('done', function(layers) {           
 
