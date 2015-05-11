@@ -51,7 +51,7 @@ function sector_dashboard(id, fData, title){
     // function to handle histogram.
     function histoGram(fD){
         var hG={},    hGDim = {t: 60, r: 5, b: 50, l: 5};
-        hGDim.w = 345 - hGDim.l - hGDim.r,
+        hGDim.w = 387 - hGDim.l - hGDim.r,
         hGDim.h = 320 - hGDim.t - hGDim.b;
  
         //create svg for histogram.
@@ -108,7 +108,7 @@ function sector_dashboard(id, fData, title){
  
         //Add title
        hGsvg.append("text")
-          .attr("x", 10)            
+          .attr("x", 5)            
           .attr("y", -35)
           .attr("text-anchor", "left") 
           .style("font-size", "14px")
@@ -221,7 +221,7 @@ function sector_dashboard(id, fData, title){
         var legend = d3.select(id).append("table")
             .attr('class', 'legend')
             .style('position', 'relative')
-            .style('left', '320px')
+            .style('left', '360px')
             .style('bottom', '80px');
  
         // create one row per segment.
