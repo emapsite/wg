@@ -20,7 +20,7 @@
 
    #charts_right{
        float: right;
-       height: 642px;
+       height: 643px;
        width: 33%;
        border: solid black 1px;
        margin: 1px 0px 0px 0px;
@@ -178,6 +178,7 @@
   <!-- dashboard js -->
   <script src="js/region_by_cap_dashboard.js"></script>
   <script src="js/region_by_sector_dashboard.js"></script>
+  <script src="js/gov_qs.js"></script>
   
   
   <script>
@@ -214,22 +215,17 @@
            createLayerSelector(layers);
           
            //add handlers for the point layers
-           var sublayer1 = layers.getSubLayer(0);
-           sublayer1.on('featureClick', function(e, pos, latlng, data) {
-              console.log("You clicked " + data.cartodb_id);              
+           var sublayer0 = layers.getSubLayer(0);
+           sublayer0.on('featureClick', function(e, pos, latlng, data) {
+               //prevent map click being fired also
+               e.stopPropagation();    
+               var qs = get_gov_qs(L.latLng(pos[0], pos[1]));               
+               $.getJSON('https://bugblatter1.cartodb.com/api/v2/sql?format=JSON&api_key=a36647bedac6e46dbaed2c7d0eb72a5fbc0b162e&q=' + qs,
+                  function(data) {                        
+                      //refresh charts
+                      sector_dashboard('#charts_bottom', data.rows[0].features, "Sector spending by local authority, " + data.rows[0].features[0].local_authority  ); 
+               });  
            });
-
-           var sublayer2 = layers.getSubLayer(2);
-           sublayer2.on('featureClick', function (e, pos, latlng, data) {
-               //cartoDB seems to require a field called the_geom. to avoid having to pull back huge geometries when we only want to populate
-               //pie charts, we can use ST_Centroid(the_geom) as the geom
-               $.getJSON('https://bugblatter1.cartodb.com/api/v2/sql?format=GeoJSON&q=SELECT la, total_project, ST_Centroid(the_geom) as the_geom from wg_capital_schemes_geom_summary_by_la &api_key=a36647bedac6e46dbaed2c7d0eb72a5fbc0b162e',
-                  function(data) {
-                      $.each(data.features, function(key, value) {
-                           console.log(value);
-                      });
-                  });              
-           });           
            
         }).on('error', function(err) {
            console.log("The following error occured " + err);

@@ -10,23 +10,44 @@
 
   
 <style>
+
+   	    
+   html, body {width:100%; height:640px; padding: 0; margin: 0;}
+   #map { 
+        float: left;
+        width: 66%; 
+        height: 640px; 
+        background: white; 
+        border: solid black 1px;
+	    left: 1px;
+        top: 1px;
+   }
+
+   #charts{
+       float: right;
+       height: 640px;
+       width: 33%;
+       border: solid black 1px;
+       top: 1px;
+   }
+
    div.cartodb-legend .legend-title {
       margin: 0 0 3px 0;
-      text-align:left;
-      color:#666;
-      font-weight:bold;
-      font-size:9px;
+      text-align: left;
+      color: #666;
+      font-weight: bold;
+      font-size: 9px;
       text-transform: uppercase;
   }
 
   div.cartodb-legend {
-    position:absolute;
+    position: absolute;
     bottom: 15px;
     right: 15px;
     padding: 3px 5px 4px 5px;
 
-    font:normal 13px "Helvetica", Arial;
-    color:#858585;
+    font: normal 13px "Helvetica", Arial;
+    color: #858585;
     text-align: left;
     webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
     -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px 2px;
@@ -42,6 +63,7 @@
     z-index: 105;
   } 
 
+ /* divs for custom layer selector */
     #layer_selector {
         position: absolute;
         top: 60px;
@@ -89,28 +111,9 @@
 		  border: 2px solid #999999;
 		  text-align:left;
 		  z-index:105;
-     }
- 
-	    
-   html, body {width:100%; height:640px; padding: 0; margin: 0;}
-   #map { 
-        float: left;
-        width: 66%; 
-        height: 640px; 
-        background: white; 
-        border: solid black 1px;
-	    left: 1px;
-        top: 1px;
-   }
+     } 
 
-   #charts{
-       float: right;
-       height: 640px;
-       width: 33%;
-       border: solid black 1px;
-       top: 1px;
-   }
-
+    /* chart css */
 	path {  stroke: #fff; }
 	path:hover {  opacity:0.9; }
 	rect:hover {  fill:blue; }
@@ -223,12 +226,11 @@
         
         function getData(latlng){
               var qs = get_gov_qs(latlng);
-                   
              
               //need to pass in local authority
                $.getJSON('https://bugblatter1.cartodb.com/api/v2/sql?format=JSON&api_key=a36647bedac6e46dbaed2c7d0eb72a5fbc0b162e&q=' + qs,
                   function(data) {   
-                      console.log(JSON.stringify(data.rows[0].features));  
+                      //console.log(JSON.stringify(data.rows[0].features));  
                       //update charts
                       if(data.rows[0].features !== null){
                           emap.data = data.rows[0].features;
