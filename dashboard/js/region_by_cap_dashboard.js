@@ -282,13 +282,13 @@
    /* Todo. Put this query in to make dynamic
    SELECT sum(total_other_funding)/population as other, sum(total_welsh_government_funding)/population as welsh_gov, population, la
    FROM wg_cap_schemes_postcode_geocoded_copy_merge where population is not null group by la, population order by LA
-   /*
+   */
 
 	var freqData = [
 		{bar_input:'Conwy', spending: {other: 468.84, welsh_gov: 1524.65 }},
 		{bar_input:'Denbighshire', spending: {other: 229.55, welsh_gov: 2287.84}},
 		{bar_input:'Flintshire', spending: { other: 2136.39, welsh_gov: 565.2}},
-		{bar_input: 'Gwynedd', spending: {other: 469.38, welsh_gov: 2634,39}},
+		{bar_input: 'Gwynedd', spending: {other: 469.38, welsh_gov: 2634.39}},
 		{bar_input:'Isle of Anglesey', spending: {other: 1126.4, welsh_gov: 678.2}},   
 		//{bar_input:'Regional', spending: {welsh_gov: 2680, other: 1234}}, 
 		{bar_input:'Wrexham', spending: {other: 170.21, welsh_gov: 1206.03}}
