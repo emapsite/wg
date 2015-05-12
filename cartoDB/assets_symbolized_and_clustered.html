@@ -111,7 +111,6 @@
         minZoom: 8
       });
 
-
       //add some tiles      
       //add some tiles      
       L.tileLayer('https://cartodb-wms.global.ssl.fastly.net/mapproxy/ws3_ws_emapsite_com_OS_Scale_Dependent_EPSG_900913/wmts/map/webmercator/{z}/{x}/{y}.png', {
@@ -132,8 +131,7 @@
            var v = cdb.vis.Overlay.create('search', map.viz, {})
            v.show();
            $('#map').append(v.render().el);
-                     
-           
+            
         }).on('error', function(err) {
            console.log("The following error occured " + err);
         });     
@@ -144,12 +142,12 @@
     // handle layer selector
     var selectedLayer;
     function createLayerSelector(layers){
-       //sql handler
-       //var sql = new cartodb.SQL({});
+       
        
       var num_sublayers = layers.getSubLayerCount();
       var $options = $('#layer_selector li');      
      
+      //handle legend click
       $options.click(function(e) {         
          $options.removeClass('selected');  
          var $li = $(e.target);  
@@ -162,7 +160,14 @@
             }              
             layers.getSubLayer(layerNum).show();
             layers.getSubLayer(0).show();//always show counties.
-          }          
+         }     
+
+         //if assets selected, zoom in to zoom 13 -- too much detail at wales level zoom
+         if(layerNum == 1){  
+            //unless already more zoomed in
+            if (map.getZoom() < 13)          
+               map.setZoom(13);
+         }
       });
     }
 
