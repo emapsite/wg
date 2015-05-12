@@ -408,7 +408,7 @@ function dashboard(id, fData, title, dep_or_sector){
  
             // transition the frequency labels location and change value.
             bars.select("text").transition().duration(500)
-                .text(function(d){ return d3.format(",.2f")(d[1])})
+                .text(function(d){ return d3.format(".0f")(d[1])})
                 .attr("y", function(d) {return y(d[1])-5; });           
         }       
         return hG;
