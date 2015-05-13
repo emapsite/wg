@@ -162,7 +162,8 @@
   <script>
     var map;  
     var emap = emap || {};
-    emap.dep_or_sector = 'sector';
+    emap.dep_or_sector = 'sector';    
+    emap.latlng = null;
 
     function init(){
        // initiate leaflet map
@@ -176,6 +177,8 @@
            //save lat/lon for use with sector/deparment switcher.
            emap.latlng = e.latlng;
            getData(emap.latlng);
+           //turn off all wales selector, as we have clicked an la
+           $('#chk_wales').attr('checked', false);
       });
 
 
@@ -194,7 +197,9 @@
          .on('done', function(layers) {  
 
            //setup layer selector
-           createLayerSelector();                
+           createLayerSelector();  
+           //setup wales on/off checkbox 
+           wales_selector()             
 
             //add search box
             var v = cdb.vis.Overlay.create('search', map.viz, {})
@@ -207,23 +212,55 @@
             console.log("The following error occured " + err);
         });     
 
+        //toggle all wales or la selection
+        function wales_selector(){
+            $('#frm_wales :checkbox').click(function(e) {
+               e.stopPropagation();
+               var $this = $(this);
+               // $this will contain a reference to the checkbox   
+				if ($this.is(':checked')) {
+                    emap.latlng = null;
+					getData(null);  
+                                
+				} else {		
+                    if (emap.latlng !== null)	{	
+                          getData(emap.latlng);
+                    }
+                   
+				}               
+			});
+      
+        }
+
         function createLayerSelector(layers){      
+            //ref to layer selected
             var $options = $('#layer_selector li');
       
             $options.click(function(e) {      
                  //prevent this layer options click from propagating to a map click event
                  e.stopPropagation();
 
-                //turn off selected on all buttons   
-                $options.removeClass('selected');
-                var $li = $(e.target);    
-                 //highlight selected
-                $li.addClass('selected');             
-                emap.dep_or_sector = $li[0].innerHTML.toLowerCase();
-                dashboard('#charts', emap.data, emap.title, emap.dep_or_sector );
+                var $li = $(e.target);  
+                //turn on/off selected on all buttons, except wales selector   
+                var id= $(this).attr('id');
+                if(id>0){
+                    $options.removeClass('selected');
+                    //highlight selected
+                    $li.addClass('selected');   
+                    //set dashboard values          
+                    emap.dep_or_sector = $li[0].innerHTML.toLowerCase();  
+                }
+                 
+                 
+                if (emap.latlng !== null)	{	
+                    getData(emap.latlng);
+                }
+                else{
+                    getData(null);
+                }
              });
          }
-      
+
         
         function getData(latlng){
               var qs = get_gov_qs(latlng);
@@ -236,7 +273,7 @@
                       if(data.rows[0].features !== null){
                           emap.data = data.rows[0].features;
                           emap.title = "Spending by " + emap.dep_or_sector + ' (£m), ' + data.rows[0].features[0].local_authority;
-                          dashboard('#charts', emap.data, emap.title, emap.dep_or_sector );
+                          dashboard('#charts', emap.data, emap.title, emap.dep_or_sector, emap.all_wales );
                       }
       
               });     
@@ -585,7 +622,8 @@ var freqData = [
 		   <div id="layer_selector" class="emapsite-infobox">
 			  <ul>        
 				<li id="1" class="selected">SECTOR</li>
-				<li id="2">DEPARTMENT</li>				
+				<li id="2">DEPARTMENT</li>	
+                <li id="0"><form id="frm_wales"><input type="checkbox" checked="checked" id="chk_wales" value="Wales">WALES</input></form></li>			
 			</div>
 		</div>	 
 	  <div id='charts'></div>
