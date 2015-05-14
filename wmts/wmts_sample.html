@@ -35,10 +35,17 @@
       <div id='placepicker'>
         <form action="" id="place" onchange="getPlace()">
           <input type="radio" name="place" value="0">Bournemouth<br>
-          <input type="radio" name="place" value="1" checked="checked">Manchester<br>
-          <input type="radio" name="place" value="2">Tweed
+          <input type="radio" name="place" value="1">Manchester<br>
+          <input type="radio" name="place" value="2">Tweed<br>
+          <input type="radio" name="place" value="3" checked="checked">London
         </form>
-      </div>
+        </div>
+        <div style="position:absolute;bottom:25px;z-index:1000;"> 
+          <!-- set initial values to Leicester Square -->
+          lat: <input type="text" id="lat" value=51.51 style="width:60px;">
+          lon: <input type="text" id="lng" value= -.13 style="width:60px">
+          <input type="button" value="Go to" onclick="gotoXY()"> 
+        </div>
   </div>
  
  <script>
@@ -59,10 +66,18 @@
                   case 2:
                      map.panTo([55.761, -2.008]);
                      break;
-                     
+                  case 3:
+                     map.panTo([51.51, -1.3]);
+                     break;                     
               }   
            }
         }
+    }
+
+    function gotoXY(){
+        var lat = document.getElementById("lat").value;
+        var lon = document.getElementById("lng").value;
+        map.panTo([lat, lon]);
     }
  
     var map; 
@@ -70,15 +85,14 @@
     function init(){		
        // initiate leaflet map
 	   map = new L.Map('map', {
-           center: [53.47723, -2.23136],
+           center: [51.51, -.13],
            zoom: 18
-       });       
-
+       }); 
 
       L.control.layers({
               'Mastermap': L.tileLayer('http://ws3.ws.emapsite.com/wmts/elgin_01_081c55dfabb9/1.0.0/uk/default/WebMercator/{z}/{y}/{x}.png', {
               minZoom:18,
-              maxZoom:20,
+              maxZoom:21,
 	          attribution: 'Ordnance Survey <a href="https://www.ordnancesurvey.co.uk/" target="_blank">Ordnance Survery</a>'
 	     }).addTo(map),
             'Open Street Map': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -88,9 +102,15 @@
          })
      }).addTo(map);
 
+     map.on('moveend', function(){
+          var latlng = map.getCenter();
+          // yes, I have heard of jquery, but sometimes old style works
+          document.getElementById("lat").value = latlng.lat;
+          document.getElementById("lng").value = latlng.lng;
+     });
 
       map.on('zoomend', function(){       
-          document.getElementById("zoom").innerHTML='Zoom: ' + map.getZoom();
+          document.getElementById("zoom").innerHTML='Zoom: ' + map.getZoom();          
      });     	
  }
 
