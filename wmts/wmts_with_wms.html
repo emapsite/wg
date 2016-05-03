@@ -1,0 +1,193 @@
+<html>
+<head>
+
+  <style type="text/css">
+      #map{
+          width:100%;
+          height:100%;
+      }
+      #zoom{
+          position:absolute; 
+          left:5px;
+          top:80px;
+          z-index:100;
+          background-color: white;
+          padding: 2 2 2 2;
+      }
+      #placepicker{
+          position:absolute; 
+          right:10px;
+          top:150px;
+          z-index:100;
+          background:#3887BE;
+          color:#fff;
+          padding: 10;
+      }
+	.menu-ui {
+	  background:#fff;
+	  position:absolute;
+	  top:10px;right:10px;
+	  z-index:1;
+	  border-radius:3px;
+	  width:120px;
+	  border:1px solid rgba(0,0,0,0.4);
+	  }
+	.menu-ui a {
+	    font-size:13px;
+	    color:#404040;
+	    display:block;
+	    margin:0;padding:0;
+	    padding:10px;
+	    text-decoration:none;
+	    border-bottom:1px solid rgba(0,0,0,0.25);
+	    text-align:center;
+	    }
+	.menu-ui a:first-child {
+	      border-radius:3px 3px 0 0;
+	      }
+	.menu-ui a:last-child {
+              border:none;
+	      border-radius:0 0 3px 3px;
+	      }
+       .menu-ui a:hover {
+	      background:#f8f8f8;
+	      color:#404040;
+	      }
+       .menu-ui a.active {
+	      background:#3887BE;
+	      color:#FFF;
+	      }
+  	.menu-ui a.active:hover {
+           background:#3074a4;
+        }
+  </style>
+
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+ 
+</head>
+
+<body onload='init()'>
+  <div id='map'>
+      <div id='zoom'>Zoom 18</div>
+      <div id='placepicker'>
+        <form action="" id="place" onchange="getPlace()">
+          <input type="radio" name="place" value="0" checked="checked" >Westiminster pier<br>
+          <input type="radio" name="place" value="1">Bournemouth<br>
+          <input type="radio" name="place" value="2">Manchester<br>
+          <input type="radio" name="place" value="3">Tweed<br>
+          <input type="radio" name="place" value="4">London
+        </form>
+        </div>
+        <div style="position:absolute;bottom:25px;z-index:1000;"> 
+          <!-- set initial values to Leicester Square -->
+          lat: <input type="text" id="lat" value=51.5015 style="width:60px;">
+          lon: <input type="text" id="lng" value=-0.1236 style="width:60px">
+          <input type="button" value="Go to" onclick="gotoXY()"> 
+        </div>
+   <nav id='map-ui' class='menu-ui'>
+    <a href='#' class='active' id='wms'>WMS</a>
+    <a href='#' id='mastermap'>Mastermap</a>
+    <a href='#' id='osm'>OSM</a>
+  </nav>
+  </div>
+ 
+ <script>
+ 
+    function getPlace(){
+        var radios = document.getElementsByTagName('input');
+        var value;
+        for (var i = 0; i < radios.length; i++) {
+           if (radios[i].type === 'radio' && radios[i].checked) {             
+              value = parseInt(radios[i].value);  
+              switch(value){
+                  case 0:
+                     map.panTo([51.5015, -0.1236]);
+                     break;
+                  case 1:
+                     map.panTo([50.7455, -1.8454]);
+                     break;
+                  case 2:
+                     map.panTo([53.47723, -2.23136]);
+                     break;
+                  case 3:
+                     map.panTo([55.761, -2.008]);
+                     break;
+                  case 4:
+                     map.panTo([51.51, -0.13]);
+                     break;                     
+              }   
+           }
+        }
+    }
+
+    function gotoXY(){
+        var lat = document.getElementById("lat").value;
+        var lon = document.getElementById("lng").value;
+        map.panTo([lat, lon]);
+    }
+ 
+    var map; 
+    
+    function init(){		
+       // initiate leaflet map
+	   map = new L.Map('map', {
+           center: [51.5015, -0.1236],
+           zoom: 18,
+           doubleClickZoom: false
+       }); 
+
+      var wms =  L.tileLayer.wms('http://indian211.internal.emapsite.com:8080/geoserver/elgin/wms?', {
+                 layers: 'elgin:cl_elgin_mastermap', 
+                 format: 'image/png',
+                 opacity: .5
+             }).addTo(map);
+
+       var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  minZoom:18,
+                  maxZoom:20,
+                  transparent:true,
+                  opacity: 0,              
+	          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	     }).addTo(map);
+
+       var mastermap = L.tileLayer('http://ws3.ws.emapsite.com/wmts/elgin_01_081c55dfabb9/1.0.0/uk/default/WebMercator/{z}/{y}/{x}.png', {
+                  maxZoom:20, 
+                  minZoom:0,
+                  transparent:true,
+                  opacity: 0,
+	          attribution: 'Ordnance Survey <a href="https://www.ordnancesurvey.co.uk/" target="_blank">Ordnance Survery</a>'
+         }).addTo(map);
+
+	// Layer switcher
+	document.getElementById('osm').onclick = function () {
+	    var enable = this.className !== 'active';
+	    osm.setOpacity(enable ? 1 : 0);
+	    this.className = enable ? 'active' : '';
+	    return false;
+	};
+
+	document.getElementById('mastermap').onclick = function () {
+	    var enable = this.className !== 'active';
+	    mastermap.setOpacity(enable ? 1 : 0);
+	    this.className = enable ? 'active' : '';
+	    return false;
+	};
+            
+     
+
+     map.on('moveend', function(){
+          var latlng = map.getCenter();
+          // yes, I have heard of jquery, but sometimes old style works
+          document.getElementById("lat").value = latlng.lat;
+          document.getElementById("lng").value = latlng.lng;
+     });
+
+      map.on('zoomend', function(){       
+          document.getElementById("zoom").innerHTML='Zoom: ' + map.getZoom();          
+     });  
+ }
+
+  </script>
+</body>
+</html>
