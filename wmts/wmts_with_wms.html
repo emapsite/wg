@@ -140,7 +140,7 @@
       var wms =  L.tileLayer.wms('http://indian211.internal.emapsite.com:8080/geoserver/elgin/wms?', {
                  layers: 'elgin:cl_elgin_mastermap', 
                  format: 'image/png',
-                 opacity: .5
+                 opacity: 1
              }).addTo(map);
 
        var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -162,14 +162,14 @@
 	// Layer switcher
 	document.getElementById('osm').onclick = function () {
 	    var enable = this.className !== 'active';
-	    osm.setOpacity(enable ? 1 : 0);
+	    osm.setOpacity(enable ? 0.5 : 0);
 	    this.className = enable ? 'active' : '';
 	    return false;
 	};
 
 	document.getElementById('mastermap').onclick = function () {
 	    var enable = this.className !== 'active';
-	    mastermap.setOpacity(enable ? 1 : 0);
+	    mastermap.setOpacity(enable ? 0.5 : 0);
 	    this.className = enable ? 'active' : '';
 	    return false;
 	};
